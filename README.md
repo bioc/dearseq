@@ -10,8 +10,8 @@ status](http://www.bioconductor.org/shields/build/release/bioc/dearseq.svg)](htt
 [![R-CMD-check](https://github.com/borishejblum/dearseq/workflows/R-CMD-check/badge.svg)](https://github.com/borishejblum/dearseq/actions)
 <!-- [![Travis-CI Build Status](https://travis-ci.org/borishejblum/dearseq.svg?branch=master)](https://travis-ci.org/borishejblum/dearseq) -->
 <!-- [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/borishejblum/dearseq?branch=master&svg=true)](https://ci.appveyor.com/project/borishejblum/dearseq) -->
-[![Coverage
-Status](https://img.shields.io/codecov/c/github/borishejblum/dearseq/master.svg)](https://codecov.io/github/borishejblum/dearseq?branch=master)
+[![Codecov test
+coverage](https://codecov.io/gh/borishejblum/dearseq/branch/master/graph/badge.svg)](https://codecov.io/gh/borishejblum/dearseq?branch=master)
 <!-- [![Downloads](https://cranlogs.r-pkg.org/badges/dearseq?color=blue)](https://www.r-pkg.org/pkg/dearseq) -->
 
 ## Overview
