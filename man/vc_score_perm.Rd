@@ -2,7 +2,7 @@
 % Please edit documentation in R/vc_score_perm.R
 \name{vc_score_perm}
 \alias{vc_score_perm}
-\title{Computes variance component test statistic and its permuted distribution}
+\title{Computes variance component score test statistics and its permuted distribution}
 \usage{
 vc_score_perm(
   y,
@@ -66,9 +66,9 @@ A list with the following elements:\itemize{
 }
 }
 \description{
-This function computes an approximation of the Variance Component test for a
-mixture of \eqn{\chi^{2}}s using Davies method from
-\code{\link[CompQuadForm]{davies}}
+This function computes the variance component score test statistics along 
+with its permuted values for estimating its distribution under the null 
+hypothesis.
 }
 \examples{
 set.seed(123)
@@ -97,8 +97,5 @@ scoreTest <- vc_score_perm(y, x, phi=t, w=matrix(1, ncol=ncol(y),
                     parallel_comp = FALSE)
 scoreTest$score
 
-}
-\seealso{
-\code{\link[CompQuadForm]{davies}}
 }
 \keyword{internal}

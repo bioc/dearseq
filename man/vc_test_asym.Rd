@@ -2,7 +2,7 @@
 % Please edit documentation in R/vc_test_asym.R
 \name{vc_test_asym}
 \alias{vc_test_asym}
-\title{Computes variance component test statistic for longitudinal}
+\title{Asymptotic variance component test statistic and p-value}
 \usage{
 vc_test_asym(
   y,
@@ -64,8 +64,8 @@ or a list with the following elements when gene-wise p-values are computed:
 }
 \description{
 This function computes an approximation of the variance component test based
-on the asymptotic distribution of a mixture of \eqn{\chi^{2}}s using Davies
-method from \code{\link[CompQuadForm]{davies}}
+on the asymptotic distribution of a mixture of \eqn{\chi^{2}}s using the saddlepoint
+method from \code{\link[survey]{pchisqsum}}, as per Chen & Lumley 20219 CSDA.
 }
 \examples{
 set.seed(123)
@@ -95,6 +95,11 @@ plot(density(asymTestRes$gene_pvals))
 quantile(asymTestRes$gene_pvals)
 
 }
+\references{
+Chen T & Lumley T (2019), Numerical evaluation of methods approximating the 
+distribution of a large quadratic form in normal variables, Computational 
+Statistics & Data Analysis, 139:75-81.
+}
 \seealso{
-\code{\link[CompQuadForm]{davies}}
+\code{\link[survey]{pchisqsum}}
 }

@@ -5,6 +5,9 @@
 
 <!-- [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dearseq)](https://cran.r-project.org/package=dearseq) -->
 
+[![BioC
+status](http://www.bioconductor.org/shields/build/release/bioc/dearseq.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/dearseq)
+[![R-CMD-check](https://github.com/borishejblum/dearseq/workflows/R-CMD-check/badge.svg)](https://github.com/borishejblum/dearseq/actions)
 [![Travis-CI Build
 Status](https://travis-ci.org/borishejblum/dearseq.svg?branch=master)](https://travis-ci.org/borishejblum/dearseq)
 [![AppVeyor Build

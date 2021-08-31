@@ -1,4 +1,4 @@
-#'Permutation-based variance component test statistic
+#'Permutation-based variance component test statistic and p-value
 #'
 #'This function computes an approximation of the Variance Component test for a
 #'mixture of \eqn{\chi^{2}}s using permutations. This is preferable to the
@@ -76,8 +76,6 @@
 #'   discovery rates
 #' }
 #'
-#'@seealso \code{\link[CompQuadForm]{davies}}
-#'
 #'@examples
 #'set.seed(123)
 #'
@@ -104,8 +102,6 @@
 #'                            indiv=rep(1:4, each=3), n_perm=50, #1000,
 #'                            parallel_comp = FALSE)
 #'permTestRes$set_pval
-#'
-#'@importFrom CompQuadForm davies
 #'
 #'@export
 vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,

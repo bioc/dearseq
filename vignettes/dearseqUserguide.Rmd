@@ -216,7 +216,7 @@ We investigates 2 gene sets that were derived in a data-driven manner By Baduel
 *et al.* (2016).
 
 
-```{r baduel, eval=TRUE, echo=TRUE}
+```{r baduel, eval=TRUE, echo=TRUE, message =FALSE}
 library(dearseq)
 library(SummarizedExperiment)
 library(BiocSet)
@@ -231,7 +231,7 @@ KAvsTBG <- dearseq::dgsa_seq(object = se2[genes_non0var_ind, ],
                              genesets=baduel_gmt$genesets[c(3,5)],
                              which_test = 'permutation', which_weights = 'loclin',
                              n_perm=1000, preprocessed = TRUE,
-                             verbose = FALSE, parallel_comp = FALSE)
+                             verbose = FALSE)
 KAvsTBG$pvals
 
 Cold <- dearseq::dgsa_seq(object = se2[genes_non0var_ind, ],
@@ -240,7 +240,7 @@ Cold <- dearseq::dgsa_seq(object = se2[genes_non0var_ind, ],
                           genesets = baduel_gmt$genesets[c(3,5)],
                           which_test = 'permutation', which_weights = 'loclin',
                           n_perm = 1000, preprocessed = TRUE, 
-                          verbose = FALSE, parallel_comp = FALSE)
+                          verbose = FALSE)
 Cold$pvals
 ```
 

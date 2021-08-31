@@ -2,7 +2,7 @@
 % Please edit documentation in R/vc_test_perm.R
 \name{vc_test_perm}
 \alias{vc_test_perm}
-\title{Permutation-based variance component test statistic}
+\title{Permutation-based variance component test statistic and p-value}
 \usage{
 vc_test_perm(
   y,
@@ -128,7 +128,4 @@ never be zero: calculating exact p-values when permutations are randomly
 drawn. \emph{Statistical Applications in Genetics and Molecular Biology},
 Volume 9, Issue 1, Article 39.
 \url{http://www.statsci.org/smyth/pubs/PermPValuesPreprint.pdf}
-}
-\seealso{
-\code{\link[CompQuadForm]{davies}}
 }

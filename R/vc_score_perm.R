@@ -1,8 +1,8 @@
-#'Computes variance component test statistic and its permuted distribution
+#'Computes variance component score test statistics and its permuted distribution
 #'
-#'This function computes an approximation of the Variance Component test for a
-#'mixture of \eqn{\chi^{2}}s using Davies method from
-#'\code{\link[CompQuadForm]{davies}}
+#'This function computes the variance component score test statistics along 
+#'with its permuted values for estimating its distribution under the null 
+#'hypothesis.
 #'
 #'@keywords internal
 #'
@@ -51,8 +51,6 @@
 #'   permuted individual gene scores
 #' }
 #'
-#'@seealso \code{\link[CompQuadForm]{davies}}
-#'
 #'@examples
 #'set.seed(123)
 #'
@@ -80,7 +78,6 @@
 #'                     parallel_comp = FALSE)
 #'scoreTest$score
 #'
-#'@importFrom CompQuadForm davies
 #'@importFrom stats model.matrix
 #'@importFrom pbapply pbsapply
 #'@importFrom parallel mclapply

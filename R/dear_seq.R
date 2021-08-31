@@ -164,10 +164,12 @@
 #'@seealso \code{\link{sp_weights}} \code{\link{vc_test_perm}}
 #'\code{\link{vc_test_asym}} \code{\link{p.adjust}}
 #'
-#'@references Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2019).
-#'dearseq: a variance component score test for RNA-Seq differential analysis
-#'that effectively controls the false discovery rate, *bioRxiv* 635714.
-#'[DOI: 10.1101/635714v1](https://www.biorxiv.org/content/10.1101/635714v1).
+#'@references Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). dearseq: 
+#'a variance component score test for RNA-Seq differential analysis that 
+#'effectivelycontrols the false discovery rate, \emph{NAR Genomics and Bioinformatics}, 
+#'2(4):lqaa093.
+#'\href{https://doi.org/10.1093/nargab/lqaa093}{DOI: 10.1093/nargab/lqaa093}.
+#'\href{https://www.biorxiv.org/content/10.1101/635714}{DOI: 10.1101/635714}
 #'
 #'@examples
 #'

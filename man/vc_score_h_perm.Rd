@@ -2,7 +2,8 @@
 % Please edit documentation in R/vc_score_h_perm.R
 \name{vc_score_h_perm}
 \alias{vc_score_h_perm}
-\title{Computes variance component test statistic for homogeneous trajectory}
+\title{Computes variance component score test statistics for homogeneous trajectory 
+and its permuted distribution}
 \usage{
 vc_score_h_perm(
   y,
@@ -69,9 +70,9 @@ A list with the following elements:
 }
 }
 \description{
-This function computes an approximation of the variance component test for
-homogeneous trajectory based on the asymptotic distribution of a mixture of
-\eqn{\chi^{2}}s using Davies method from \code{\link[CompQuadForm]{davies}}
+This function computes the variance component score test statistics 
+for homogeneous trajectories along with its permuted values for estimating 
+its distribution under the null hypothesis.
 }
 \examples{
 set.seed(123)
@@ -128,8 +129,5 @@ scoreTest_heterogen <- vc_test_asym(y, x, phi=tim, indiv=rep(1:nindiv,
                                    Sigma_xi=cov(tim), homogen_traj = FALSE)
 scoreTest_heterogen$set_pval
 
-}
-\seealso{
-\code{\link[CompQuadForm]{davies}}
 }
 \keyword{internal}

@@ -1,8 +1,9 @@
-#'Computes variance component test statistic for homogeneous trajectory
+#'Computes variance component score test statistics for homogeneous trajectory 
+#'and its permuted distribution
 #'
-#'This function computes an approximation of the variance component test for
-#'homogeneous trajectory based on the asymptotic distribution of a mixture of
-#'\eqn{\chi^{2}}s using Davies method from \code{\link[CompQuadForm]{davies}}
+#'This function computes the variance component score test statistics 
+#'for homogeneous trajectories along with its permuted values for estimating 
+#'its distribution under the null hypothesis.
 #'
 #'@keywords internal
 #'
@@ -111,8 +112,6 @@
 #'                                    Sigma_xi=cov(tim), homogen_traj = FALSE)
 #'scoreTest_heterogen$set_pval
 #'
-#'@seealso \code{\link[CompQuadForm]{davies}}
-#'@importFrom CompQuadForm davies
 #'@importFrom pbapply pbsapply
 #'@importFrom parallel mclapply
 #'

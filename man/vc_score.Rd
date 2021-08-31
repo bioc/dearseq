@@ -2,7 +2,7 @@
 % Please edit documentation in R/vc_score.R
 \name{vc_score}
 \alias{vc_score}
-\title{Computes variance component test statistic for longitudinal}
+\title{Computes variance component score test statistics}
 \usage{
 vc_score(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)), na_rm = FALSE)
 }
@@ -40,9 +40,7 @@ A list with the following elements:\itemize{
 }
 }
 \description{
-This function computes an approximation of the Variance Component test for a
-mixture of \eqn{\chi^{2}}s using Davies method from
-\code{\link[CompQuadForm]{davies}}
+This function computes the variance component score test statistics
 }
 \examples{
 set.seed(123)
@@ -69,8 +67,5 @@ scoreTest <- vc_score(y, x, phi=t, w=matrix(1, ncol=ncol(y), nrow=nrow(y)),
                     Sigma_xi=matrix(1), indiv=rep(1:(r/3), each=3))
 scoreTest$score
 
-}
-\seealso{
-\code{\link[CompQuadForm]{davies}}
 }
 \keyword{internal}

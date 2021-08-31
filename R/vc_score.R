@@ -1,8 +1,6 @@
-#'Computes variance component test statistic for longitudinal
+#'Computes variance component score test statistics
 #'
-#'This function computes an approximation of the Variance Component test for a
-#'mixture of \eqn{\chi^{2}}s using Davies method from
-#'\code{\link[CompQuadForm]{davies}}
+#'This function computes the variance component score test statistics
 #'
 #'@keywords internal
 #'
@@ -37,8 +35,6 @@
 #'   individual gene scores
 #' }
 #'
-#'@seealso \code{\link[CompQuadForm]{davies}}
-#'
 #'@examples
 #'set.seed(123)
 #'
@@ -64,7 +60,6 @@
 #'                     Sigma_xi=matrix(1), indiv=rep(1:(r/3), each=3))
 #'scoreTest$score
 #'
-#'@importFrom CompQuadForm davies
 #'@importFrom stats model.matrix
 #'
 #'@export

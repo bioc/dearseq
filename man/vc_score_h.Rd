@@ -2,7 +2,7 @@
 % Please edit documentation in R/vc_score_h.R
 \name{vc_score_h}
 \alias{vc_score_h}
-\title{Computes variance component test statistic for homogeneous trajectory}
+\title{Computes variance component score test statistic for homogeneous trajectories}
 \usage{
 vc_score_h(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)), na_rm = FALSE)
 }
@@ -41,9 +41,8 @@ A list with the following elements:\itemize{
 }
 }
 \description{
-This function computes an approximation of the variance component test for
-homogeneous trajectory based on the asymptotic distribution of a mixture of
-\eqn{\chi^{2}}s using Davies method from \code{\link[CompQuadForm]{davies}}
+This function computes the variance component score test statistics for 
+homogeneous trajectories
 }
 \examples{
 set.seed(123)
@@ -98,8 +97,5 @@ scoreTest_heterogen <- vc_test_asym(y, x, phi=tim, indiv=rep(1:nindiv,
                                    homogen_traj = FALSE)
 scoreTest_heterogen$set_pval
 
-}
-\seealso{
-\code{\link[CompQuadForm]{davies}}
 }
 \keyword{internal}

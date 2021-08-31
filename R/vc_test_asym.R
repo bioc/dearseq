@@ -1,9 +1,8 @@
-#'Computes variance component test statistic for longitudinal
+#'Asymptotic variance component test statistic and p-value
 #'
 #'This function computes an approximation of the variance component test based
-#'on the asymptotic distribution of a mixture of \eqn{\chi^{2}}s using Davies
-#'method from \code{\link[CompQuadForm]{davies}}
-#'
+#'on the asymptotic distribution of a mixture of \eqn{\chi^{2}}s using the saddlepoint
+#'method from \code{\link[survey]{pchisqsum}}, as per Chen & Lumley 20219 CSDA.
 #'
 #'@param y a numeric matrix of dim \code{g x n} containing the raw or normalized
 #'RNA-seq counts for g genes from \code{n} samples.
@@ -50,7 +49,12 @@
 #' }
 #'
 #'
-#'@seealso \code{\link[CompQuadForm]{davies}}
+#'@seealso \code{\link[survey]{pchisqsum}}
+#'
+#'@references 
+#'Chen T & Lumley T (2019), Numerical evaluation of methods approximating the 
+#'distribution of a large quadratic form in normal variables, Computational 
+#'Statistics & Data Analysis, 139:75-81.
 #'
 #'@examples
 #'set.seed(123)
@@ -79,7 +83,7 @@
 #'plot(density(asymTestRes$gene_pvals))
 #'quantile(asymTestRes$gene_pvals)
 #'
-#'@importFrom CompQuadForm davies
+#'@importFrom survey pchisqsum
 #'@importFrom stats pchisq cov
 #'@importFrom matrixStats colVars
 #'
@@ -115,10 +119,21 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                 pv <- stats::pchisq(gene_scores_obs/gene_lambda, df = 1,
                                     lower.tail = FALSE)
             } else {
-                pv <- unlist(mapply(FUN = CompQuadForm::davies,
-                                    q = gene_scores_obs,
-                                    lambda = gene_lambda, lim = 15000,
-                                    acc = 5e-04)["Qq", ])
+                pv <- mapply(FUN = survey::pchisqsum, 
+                                 x = gene_scores_obs,
+                                 df=1,
+                                 a = gene_lambda,
+                                 lower.tail=FALSE,
+                                 method = "saddlepoint"
+                )
+                
+                
+                ## pv <- unlist(mapply(FUN = CompQuadForm::davies,
+                ##                     q = gene_scores_obs,
+                ##                     lambda = gene_lambda, lim = 15000,
+                ##                     acc = 5e-04)["Qq", ])
+                ## old slow davies method  (somtimes accuracy issues with low p-vals)
+                
                 ## pv <- stats::pchisq(gene_scores_obs/gene_lambda, df = 1,
                 ## lower.tail = FALSE) # same result ? only if phi is univariate
             }
@@ -143,13 +158,19 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                 return(lam)
             })
             
-            pv <- unlist(mapply(FUN = CompQuadForm::davies, q = gene_scores_obs,
-                                lambda = gene_lambda, lim = 15000,
-                                acc = 5e-04)["Qq", ])
+            pv <- mapply(FUN = survey::pchisqsum, 
+                         x = gene_scores_obs,
+                         df=1,
+                         a = gene_lambda,
+                         lower.tail=FALSE,
+                         method = "saddlepoint"
+            )
         }
         
         names(pv) <- rownames(y)
-        ans <- list(gene_scores_obs = gene_scores_obs, gene_pvals = pv)
+        
+        ans <- list("gene_scores_obs" = gene_scores_obs, 
+                    "gene_pvals" = pv)
         
     } else {
         
@@ -169,33 +190,14 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                             })
         }
         
-        acc <- 0.0001 #default value
-        dv <- CompQuadForm::davies(score_list$score, lam, acc = acc)
+        dv <- survey::pchisqsum(x = score_list$score, 
+                                    df=1, 
+                                    a = lam,
+                                    lower.tail = FALSE,
+                                    method = "saddlepoint")
         
-        comp <- 1 #reducing the acc value if the calculated pvalue is negative
-        while ((dv$Qq <= 0 | dv$Qq == 1) & acc >= 1.5*10^-7){
-            acc <- acc/2
-            dv <- CompQuadForm::davies(q = score_list$score, 
-                                       lambda = lam, acc = acc)
-        }
-        if (dv$Qq<0){
-            dv$Qq=0
-            message("accuracy in davies at ", acc, "still giving <0 ",
-                    "probability, probability set to 0")
-        }
-        
-        if(dv$ifault == 1){# accuracy error
-            dv <- CompQuadForm::davies(score_list$score, lam, acc = 0.001)
-            if(dv$ifault == 1){
-                stop("fault in the computation from CompQuadForm::davies",
-                     dv$trace)
-            }
-        }
-        if(dv$ifault > 1){# other error
-            stop("fault in the computation from CompQuadForm::davies\n",
-                 dv$trace)
-        }
-        ans <- list(set_score_obs = score_list$score, set_pval = dv$Qq)
+        ans <- list("set_score_obs" = score_list$score, 
+                    "set_pval" = dv)
     }
     
     return(ans)

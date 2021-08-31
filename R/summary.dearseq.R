@@ -23,10 +23,12 @@ summary.dearseq <- function(object, signif_threshold = 0.05, ...){
   s <- list()
   s$which_test <- object$which_test
   s$preprocessed <- object$preprocessed
+  s$n_tests <- length(adj_pval)
   s$n_signif <- sum(adj_pval < signif_threshold)
   s$which_signif <- names(adj_pval)[adj_pval < signif_threshold]
   s$signif_threshold <- signif_threshold
   s$adj_pval <- adj_pval[adj_pval < signif_threshold]
+  s$gsa <- !is.null(object$genesets)
   
   class(s) <- "summary.dearseq"
   return(s)
@@ -38,7 +40,11 @@ summary.dearseq <- function(object, signif_threshold = 0.05, ...){
 #'
 #'@export
 print.summary.dearseq <- function(x, ...){
-  cat(paste("dearseq identifies", x$n_signif, "significant genes\n"))
+  if(x$gsa){
+    cat(paste("dearseq identifies", x$n_signif, "significant genes sets out of", x$n_tests, "\n"))
+  }else{
+    cat(paste("dearseq identifies", x$n_signif, "significant genes out of", x$n_tests, "\n"))
+  }
   cat(paste(" - test:", x$which_test, "\n"))
-  cat(paste(" - significance level:", x$signif_threshold, "\n"))
+  cat(paste(" - FDR significance level:", x$signif_threshold, "\n"))
 }
