@@ -84,7 +84,7 @@ nindiv <- 30
 nt <- 5
 nsample <- nindiv*nt
 tim <- matrix(rep(1:nt), nindiv, ncol=1, nrow=nsample)
-tim <- cbind(tim, tim^2)
+tim2 <- tim^2
 sigma <- 5
 b0 <- 10
 
@@ -99,6 +99,8 @@ y.tilde <- b0 + rnorm(ng, sd = sigma)
 y <- t(matrix(rep(y.tilde, nsample), ncol=ng, nrow=nsample, byrow=TRUE) +
       matrix(rep(beta1, each=nsample), ncol=ng, nrow=nsample, byrow=FALSE) *
            matrix(rep(tim, ng), ncol=ng, nrow=nsample, byrow=FALSE) +
+      #matrix(rep(beta1, each=nsample), ncol=ng, nrow=nsample, byrow=FALSE) *
+      #     matrix(rep(tim2, ng), ncol=ng, nrow=nsample, byrow=FALSE) +
       matrix(rnorm(ng*nsample, sd = sigma), ncol=ng, nrow=nsample,
              byrow=FALSE)
       )
