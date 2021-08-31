@@ -9,7 +9,7 @@
 #'normalized RNA-seq counts for g genes from \code{n} samples.
 #'
 #'@param x a numeric design matrix of dim \code{n x p} containing the \code{p}
-#'covariates to be adjusted for
+#'covariates to be adjusted for.
 #'
 #'@param indiv a vector of length \code{n} containing the information for
 #'attributing each sample to one of the studied individuals. Coerced
@@ -17,7 +17,7 @@
 #'
 #'@param phi a numeric design matrix of size \code{n x K} containing the
 #'\code{K} longitudinal variables to be tested (typically a vector of time
-#'points or functions of time)
+#'points or functions of time).
 #'
 #'@param w a vector of length \code{n} containing the weights for the \code{n}
 #'samples, corresponding to the inverse of the diagonal of the estimated
@@ -48,7 +48,7 @@
 #'nt <- 5
 #'nsample <- nindiv*nt
 #'tim <- matrix(rep(1:nt), nindiv, ncol=1, nrow=nsample)
-#'tim <- cbind(tim, tim^2)
+#'tim2 <- tim^2
 #'sigma <- 5
 #'b0 <- 10
 #'
@@ -61,8 +61,10 @@
 #'
 #'y.tilde <- b0 + rnorm(ng, sd = sigma)
 #'y <- t(matrix(rep(y.tilde, nsample), ncol=ng, nrow=nsample, byrow=TRUE) +
-#'       matrix(rep(beta1, each=nsample), ncol=ng, nrow=nsample, byrow=FALSE)*
-#'           matrix(rep(tim, ng), ncol=ng, nrow=nsample, byrow=FALSE) +
+#'       matrix(rep(beta1, each=nsample), ncol=ng, nrow=nsample, byrow=FALSE) *
+#'            matrix(rep(tim, ng), ncol=ng, nrow=nsample, byrow=FALSE) +
+#'       #matrix(rep(beta1, each=nsample), ncol=ng, nrow=nsample, byrow=FALSE) *
+#'       #    matrix(rep(tim2, ng), ncol=ng, nrow=nsample, byrow=FALSE) +
 #'       matrix(rnorm(ng*nsample, sd = sigma), ncol=ng, nrow=nsample,
 #'              byrow=FALSE)
 #'       )

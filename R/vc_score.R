@@ -5,23 +5,23 @@
 #'@keywords internal
 #'
 #'@param y a numeric matrix of dim \code{g x n} containing the raw RNA-seq
-#'counts for g genes from \code{n} samples
+#'counts for g genes from \code{n} samples.
 #'
 #'@param x a numeric design matrix of dim \code{n x p} containing the \code{p}
-#'covariates to be adjusted for
+#'covariates to be adjusted for.
 #'
 #'@param indiv a vector of length \code{n} containing the information for
 #'attributing each sample to one of the studied individuals. Coerced
-#'to be a \code{factor}
+#'to be a \code{factor}.
 #'
 #'@param phi a numeric design matrix of size \code{n x K} containing the
-#'\code{K} variables to be tested
+#'\code{K} variables to .be tested
 #'
 #'@param w a vector of length \code{n} containing the weights for the \code{n}
 #'samples.
 #'
 #'@param Sigma_xi a matrix of size \code{K x K} containing the covariance matrix
-#'of the \code{K} random effects on \code{phi}
+#'of the \code{K} random effects on \code{phi}.
 #'
 #'@param na_rm logical: should missing values (including \code{NA} and
 #'\code{NaN}) be omitted from the calculations? Default is \code{FALSE}.
