@@ -41,15 +41,15 @@ such as:
  - **multiple biological conditions**, 
  - **repeated or longitudinal measurements**
 
-More details are provided in this 
-[*bioRxiv* preprint 635714](https://www.biorxiv.org/content/10.1101/635714v1).
+More details are provided Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). dearseq: a variance component score test for RNA-Seq differential analysis that effectively controls the false discovery rate, *NAR Genomics and Bioinformatics*, 2(4):lqaa093.  
+[DOI: 10.1093/nargab/lqaa093](https://doi.org/10.1093/nargab/lqaa093)
 
 
 # Using `dearseq` for a gene-wise analysis 
 
 ## Getting started using `dear_seq()`
 
-2 inputs are required to run `dear_seq()`:
+Two inputs are required to run `dear_seq()`:
 
  - The gene expression matrix
  - The data.frame containing the variables of interested to be tested (e.g. 
@@ -148,7 +148,7 @@ The main arguments to the `dear_seq()` function are:
 
 We use the permutation test because of the relatively small sample size ($n=33$).
 
-```{r LR_ST_echo, eval=TRUE, echo=TRUE, message=FALSE}
+```{r LR_ST_echo, eval=TRUE, echo=TRUE, message=FALSE, fig.width=8, fig.height=8, out.width="98%"}
 library(dearseq)
 library(SummarizedExperiment)
 col_data <- data.frame("Status" = infos_df$Status)
@@ -182,7 +182,7 @@ normalized then into log(counts) per million (i.e. *log-cpm*). We set `preproces
 
 The matrix of raw counts (Raw\_counts\_Berry\_London) contains $58,051$ genes and $54$ samples. As described in Singhania *et al.*, only genes expressed with counts per million (CPM) $> 2$ in at least five samples were considered. The filtering is carried out with `edgeR`. It results in a matrix of raw counts containing $14,150$ genes and $54$ samples (London\_raw). Of note, many filtering and normalization methods may be considered and the user must be cautious applying them.
 
-```{r London_raw, eval=TRUE, echo=TRUE, warning = FALSE, message=FALSE, results='hide'}
+```{r London_raw, eval=TRUE, echo=TRUE, warning = FALSE, message=FALSE, results='hide', fig.width=8, fig.height=8, out.width="98%"}
 library(readxl)
 library(edgeR)
 GEOquery::getGEOSuppFiles('GSE107991', 
@@ -205,6 +205,7 @@ res_dearseq <- dearseq::dear_seq(object = se_raw[, se_raw$Status != "LTBI"],
                                  variables2test = "Status",
                                  which_test='permutation',
                                  preprocessed=FALSE)
+
 summary(res_dearseq)
 plot(res_dearseq)
 ```
@@ -262,10 +263,7 @@ Baduel P, Arnold B, Weisman CM, Hunter B & Bomblies K (2016). Habitat-Associated
 
 Berry MP, Graham CM, McNab FW, Xu Z, Bloch SAA, Oni T, Wilkinson KA, Banchereau R, Skinner J, Wilkinson RJ, Quinn C, Blankenship D, Dhawan R, Cush JJ, Mejias A, Ramilo O, Kon OM, Pascual V, Banchereau J, Chaussabel D & O’Garra A (2010). An interferon-inducible neutrophil-driven blood transcriptional signature in human tuberculosis. *Nature* 466:973–977. [DOI: 10.1038/nature09247](https://doi.org/10.1038/nature09247)
 
-Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2019). dearseq: a
-variance component score test for RNA-Seq differential analysis that
-effectively controls the false discovery rate. *bioRxiv* 635714. [DOI: 10.1101/635714v1](https://www.biorxiv.org/content/10.1101/635714v1).
-
+Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). dearseq: a variance component score test for RNA-Seq differential analysis that effectively controls the false discovery rate. *NAR Genomics and Bioinformatics*, 2(4):lqaa093. [DOI: 10.1093/nargab/lqaa093](https://doi.org/10.1093/nargab/lqaa093)
 
 Singhania A, Verma R, Graham CM, Lee J, Tran T, Richardson M, Lecine P, Leissner P, Berry MPR, Wilkinson RJ, Kaiser K, Rodrigue M, Woltmann G, Haldar P, O’Garra A, (2018). A modular transcriptional signature identifies phenotypic heterogeneity of human tuberculosis infection. _Nature communications_ 9(1):2308. [DOI: 10.1038/s41467-018-04579-w](https://doi.org/10.1038/s41467-018-04579-w)
 
