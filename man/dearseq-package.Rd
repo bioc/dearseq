@@ -16,7 +16,7 @@ Differential Expression Analysis RNA-seq data with variance
              detailed in: i) Agniel D & Hejblum BP (2017) Variance component score 
              test for time-course gene set analysis of longitudinal RNA-seq 
              data, Biostatistics, 18(4):589-604 ; and ii) Gauthier M, Agniel D, 
-             Thiébaut R & Hejblum BP (2020). dearseq: a variance component 
+             Thiébaut R & Hejblum BP (2020) dearseq: a variance component 
              score test for RNA-Seq differential analysis that effectively 
              controls the false discovery rate, NAR Genomics and Bioinformatics,
              2(4):lqaa093.
@@ -30,7 +30,7 @@ complex experimental designs such as longitudinal data.
 \tabular{ll}{
 Package: \tab dearseq\cr
 Type: \tab Package\cr
-Version: \tab 1.6.0\cr
+Version: \tab 1.5.1\cr
 Date: \tab 2021-09-01\cr
 License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 }

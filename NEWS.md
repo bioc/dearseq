@@ -1,6 +1,6 @@
 # News about the `dearseq` R package
 
-### Version 1.4.0 (2021-08-31):
+### Version 1.5.1 (2021-09-01):
 *  switching from `CompQuadForm::davies()` to the `"saddlepoint"` method from 
 `survey::pchisqsum()` for computing quadratic form asymptotic p-values
 
