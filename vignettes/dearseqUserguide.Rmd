@@ -161,6 +161,8 @@ res_dearseq <- dearseq::dear_seq(object = se[, se$Status != "LTBI"],
                                  variables2test = "Status",
                                  which_test='asymptotic',
                                  preprocessed=TRUE)
+summary(res_dearseq)
+plot(res_dearseq)
 ```
 
 
@@ -203,6 +205,8 @@ res_dearseq <- dearseq::dear_seq(object = se_raw[, se_raw$Status != "LTBI"],
                                  variables2test = "Status",
                                  which_test='permutation',
                                  preprocessed=FALSE)
+summary(res_dearseq)
+plot(res_dearseq)
 ```
 
 
@@ -216,7 +220,7 @@ We investigates 2 gene sets that were derived in a data-driven manner By Baduel
 *et al.* (2016).
 
 
-```{r baduel, eval=TRUE, echo=TRUE, message =FALSE}
+```{r baduel, eval=TRUE, echo=TRUE, message=FALSE}
 library(dearseq)
 library(SummarizedExperiment)
 library(BiocSet)
@@ -230,8 +234,9 @@ KAvsTBG <- dearseq::dgsa_seq(object = se2[genes_non0var_ind, ],
                              variables2test = 'PopulationKA',
                              genesets=baduel_gmt$genesets[c(3,5)],
                              which_test = 'permutation', which_weights = 'loclin',
-                             n_perm=1000, preprocessed = TRUE,
+                             n_perm=2000, preprocessed = TRUE,
                              verbose = FALSE)
+summary(KAvsTBG)
 KAvsTBG$pvals
 
 Cold <- dearseq::dgsa_seq(object = se2[genes_non0var_ind, ],
@@ -239,8 +244,9 @@ Cold <- dearseq::dgsa_seq(object = se2[genes_non0var_ind, ],
                           variables2test = c('Vernalized', 'Vernalized_Population'),
                           genesets = baduel_gmt$genesets[c(3,5)],
                           which_test = 'permutation', which_weights = 'loclin',
-                          n_perm = 1000, preprocessed = TRUE, 
+                          n_perm = 2000, preprocessed = TRUE, 
                           verbose = FALSE)
+summary(Cold)
 Cold$pvals
 ```
 
