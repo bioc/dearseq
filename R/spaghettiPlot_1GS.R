@@ -18,7 +18,7 @@
 #'
 #' @importFrom tibble rownames_to_column
 #' @importFrom reshape2 melt
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr "%>%"
 #' @importFrom dplyr filter left_join
 #' @importFrom rlang eval_tidy
 #' @importFrom stats median sd
