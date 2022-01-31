@@ -28,7 +28,6 @@ Description: Differential Expression Analysis RNA-seq data with variance
              score test for RNA-Seq differential analysis that effectively 
              controls the false discovery rate, NAR Genomics and Bioinformatics,
              2(4):lqaa093.
-LazyData: true
 License: GPL-2 | file LICENSE
 biocViews: BiomedicalInformatics, CellBiology, DifferentialExpression, DNASeq,
         GeneExpression, Genetics, GeneSetEnrichment, ImmunoOncology, KEGG,
