@@ -2,17 +2,19 @@ Package: dearseq
 Type: Package
 Title: Differential Expression Analysis for RNA-seq data through a robust 
        variance component test
-Version: 1.5.1
-Date: 2021-09-01
+Version: 1.6.0
+Date: 2022-01-31
 Authors@R: c(person("Denis", "Agniel", role = c("aut"),
                     email = "denis.agniel@gmail.com"),
 	           person("Boris P.", "Hejblum", role = c("aut", "cre"),
 	                  email = "boris.hejblum@u-bordeaux.fr"),
 	           person("Marine", "Gauthier", role = c("aut"),
-	                  email = "marine.gauthier@u-bordeaux.fr"))
+	                  email = "marine.gauthier@u-bordeaux.fr"),
+	           person("Mélanie", "Huchon", role = c("ctb"),
+	                  email = "melanie.huchon@u-bordeaux.fr"))
 Depends: R (>= 3.6.0)
-Imports: ggplot2, KernSmooth, matrixStats, methods, patchwork, 
-         parallel, pbapply, stats, statmod, survey, viridisLite
+Imports: dplyr, ggplot2, KernSmooth, magrittr, matrixStats, methods, patchwork, 
+         parallel, pbapply, reshape2, rlang, stats, statmod, survey, tibble, viridisLite
 Suggests: Biobase, BiocManager, BiocSet, edgeR, DESeq2, GEOquery, GSA, knitr, 
           limma, readxl, rmarkdown, S4Vectors, SummarizedExperiment, testthat, covr
 Description: Differential Expression Analysis RNA-seq data with variance 
