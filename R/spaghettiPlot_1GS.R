@@ -32,7 +32,7 @@
 #' dearseq::spaghettiPlot_1GS(gs_index = 3, gmt = baduel_gmt, expr_mat = expr_norm_corr, design = design, var_time = AgeWeeks, var_patient = PopulationID)
 
 spaghettiPlot_1GS <- function(gs_index, gmt, expr_mat, design, var_time, var_patient, var_group = NULL, var_subgroup = NULL, plotChoice = c("Patient medians", "Individual")){ 
-  
+
   #Before to call a tidy evaluation function (ggplot) inside of another function
   # use enquo() and !! before object of the function
   var_subgroup_tidy <- enquo(var_subgroup)
@@ -48,7 +48,7 @@ spaghettiPlot_1GS <- function(gs_index, gmt, expr_mat, design, var_time, var_pat
   data2plot <- reshape2::melt(gs_expr, value.name = "Normalized_Expression", variable.name = "SampleID") %>% 
     left_join(y = design) %>% 
     mutate(SYMBOL = as.factor(SYMBOL))
-  
+
   data2plot <- data2plot %>% mutate(group_line = SYMBOL:!!var_patient_tidy)
   
   data2plot <- data2plot %>% 
@@ -74,7 +74,7 @@ spaghettiPlot_1GS <- function(gs_index, gmt, expr_mat, design, var_time, var_pat
     ylab("Standardized expression") +
     ggtitle("Patient medians")
 
-  
+
   #Plot of Individual data
   p2 <- ggplot(data2plot, aes(x = !!var_time_tidy, y = Standardized_Expression)) +
     geom_line(aes(group = group_line, color = SYMBOL, linetype = !!var_subgroup_tidy), alpha = 0.4) +
@@ -112,3 +112,4 @@ spaghettiPlot_1GS <- function(gs_index, gmt, expr_mat, design, var_time, var_pat
   }
 
 }
+
