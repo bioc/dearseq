@@ -47,8 +47,10 @@ Spaghetti plot for Specific Gene Set
 }
 \examples{
 data(baduel_5gs) 
-
 expr_norm_corr <- as.data.frame(expr_norm_corr)
+
+library(dplyr)
+
 #Remove "Vernalized" columns 
 expr_norm_corr <- expr_norm_corr \%>\% select(!ends_with("V")) 
 

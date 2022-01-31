@@ -18,7 +18,7 @@
 #'
 #' @importFrom tibble rownames_to_column
 #' @importFrom reshape2 melt
-#' @importFrom magrittr "%>%"
+#' @importFrom magrittr %>%
 #' @importFrom dplyr filter left_join
 #' @importFrom rlang eval_tidy
 #' @importFrom stats median sd
@@ -27,8 +27,10 @@
 #' 
 #' @examples
 #' data(baduel_5gs) 
-#' 
 #' expr_norm_corr <- as.data.frame(expr_norm_corr)
+#'
+#' library(dplyr)
+#' 
 #' #Remove "Vernalized" columns 
 #' expr_norm_corr <- expr_norm_corr %>% select(!ends_with("V")) 
 #' 
