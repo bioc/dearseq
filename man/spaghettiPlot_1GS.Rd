@@ -6,31 +6,34 @@
 \usage{
 spaghettiPlot_1GS(
   gs_index,
-  expr_mat,
   gmt,
+  expr_mat,
   design,
   var_time,
   var_patient,
-  var_group,
-  var_add
+  var_group = NULL,
+  var_subgroup = NULL,
+  plotChoice = c("Patient medians", "Individual")
 )
 }
 \arguments{
-\item{gs_index}{index of the gene set in the \code{gmt}}
+\item{gs_index}{index of the specific gene set in \code{gmt}.}
 
-\item{expr_mat}{where rownames = names of genes and colames = names of sampleId}
+\item{gmt}{a \code{list} of element : geneset, geneset.name and geneset.description.}
 
-\item{gmt}{list of element whose gene sets, their name and description}
+\item{expr_mat}{a data frame with numerics of size \code{G x n} contraining the raw RNA-seq counts from \code{n} samples for \code{G} genes.}
 
-\item{design}{sampleinfo}
+\item{design}{a data frame containing the information of each sample (SampleID).}
 
-\item{var_time}{in \code{design}}
+\item{var_time}{the \code{time} or \code{visit} variable contained in \code{design} data.}
 
-\item{var_patient}{in \code{design}}
+\item{var_patient}{the patient variable contained in \code{design} data.}
 
-\item{var_group}{in \code{design} (Vaccine)}
+\item{var_group}{a group variable in \code{design} data to divide into two facets. Default is \code{NULL}.}
 
-\item{var_add}{in \code{design} and in example of Covax is Recovered}
+\item{var_subgroup}{a subgroup variable in \code{design} data to add 2 curves on plot for each subgroup. Default is \code{NULL}.}
+
+\item{plotChoice}{to choose which type of plot. Default is \code{c("Patient medians", "Individual")}}
 }
 \value{
 
@@ -39,45 +42,17 @@ spaghettiPlot_1GS(
 Spaghetti plot for Specific Gene Set
 }
 \examples{
-load("C:/Users/mh8/Seafile/COVAX_SIRA/Data/COVAX_DESEQ_vst_normalization_PRIME.Rdata")
-data_nor_prime <- data_nor
-sample_info_prime <- sample_info
-load("C:/Users/mh8/Seafile/COVAX_SIRA/Data/COVAX_DESEQ_vst_normalization_BOOST.Rdata")
-data_nor_boost <- data_nor
-sample_info_boost <- sample_info
-covax_vstnorm <- cbind.data.frame(data_nor_prime, data_nor_boost)
-covax_sampleinfo <- rbind.data.frame(sample_info_prime, sample_info_boost)
-stopifnot(all.equal(as.character(covax_sampleinfo$SampleID), colnames(covax_vstnorm)))
-rm(data_nor_prime, sample_info_prime, data_nor_boost, sample_info_boost, data_nor, sample_info)
+data(baduel_5gs) 
 
-covax_sampleinfo$Time <- as.numeric(gsub("C[[:digit:]][[:upper:]]", "", covax_sampleinfo$Timepoint))
-covax_sampleinfo$Time[stringr::str_length(covax_sampleinfo$Time) == 1] <- covax_sampleinfo$Time[stringr::str_length(covax_sampleinfo$Time) == 1] - 1
-covax_sampleinfo$Vaccine <- factor(covax_sampleinfo$Type_vaccine, levels = c("Pfizer", "Moderna"))
-covax_sampleinfo$History <- factor(covax_sampleinfo$Recovered, levels = c("NO", "YES"))
-covax_sampleinfo$Patient <- factor(gsub(covax_sampleinfo$PatientID,pattern = "CVX",replacement = ""), levels=c(1:21, 25, 26))
-covax_sampleinfo$D1 <- 1*(covax_sampleinfo$Time == 1)
-covax_sampleinfo$D2 <- 1*(covax_sampleinfo$Time == 2)
-covax_sampleinfo$D4 <- 1*(covax_sampleinfo$Time == 4)
-covax_sampleinfo$D5 <- 1*(covax_sampleinfo$Time == 5)
+expr_norm_corr <- as.data.frame(expr_norm_corr)
+#Remove "Vernalized" columns 
+expr_norm_corr <- expr_norm_corr \%>\% select(!ends_with("V")) 
 
-covax_prime_sampleinfo <- covax_sampleinfo[covax_sampleinfo$DOSE=="PRIME", ]
-covax_prime_expr <- covax_vstnorm[,covax_sampleinfo$DOSE=="PRIME"]
-covax_boost_sampleinfo <- covax_sampleinfo[covax_sampleinfo$DOSE=="BOOST", ]
-covax_boost_expr <- covax_vstnorm[,covax_sampleinfo$DOSE=="BOOST"]
+#Change name of sample 
+colnames(design)[1] <- "SampleID"
+design <- design \%>\% filter(Vernalized == FALSE)
+#Modify the Population ID to obtain value of population for each replicate
+design <- design \%>\% mutate(PopulationID = Population:Replicate)
 
-pfizer_n <- covax_prime_sampleinfo \%>\% filter(Vaccine == "Pfizer") \%>\%
- select(PatientID) \%>\% 
- n_distinct()
-moderna_n <- covax_prime_sampleinfo \%>\% filter(Vaccine == "Moderna") \%>\%
- select(PatientID) \%>\% 
- n_distinct() 
-recovered_yes_n <- covax_prime_sampleinfo \%>\% filter(Recovered == "YES") \%>\%
- select(PatientID) \%>\% 
- n_distinct() 
-recovered_no_n <- covax_prime_sampleinfo \%>\% filter(Recovered == "NO") \%>\%
- select(PatientID) \%>\% 
- n_distinct()
-load("C:/Users/mh8/Seafile/COVAX_SIRA/Data/modules_Chaussabel_Gen3_gmt.RData")
-
-
+dearseq::spaghettiPlot_1GS(gs_index = 3, gmt = baduel_gmt, expr_mat = expr_norm_corr, design = design, var_time = AgeWeeks, var_patient = PopulationID, var_group = PopulationKA)
 }
