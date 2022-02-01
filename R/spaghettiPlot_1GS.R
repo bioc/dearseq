@@ -6,13 +6,14 @@
 #' raw RNA-seq counts from \code{n} samples for \code{G} genes.
 #' @param design a data frame containing the information of each sample (SampleID).
 #' @param var_time the \code{time} or \code{visit} variable contained in \code{design} data.
-#' @param var_patient the patient variable contained in \code{design} data.
+#' @param var_indiv the patient variable contained in \code{design} data.
 #' @param var_group a group variable in \code{design} data to divide into two 
 #' facets. Default is \code{NULL}.
 #' @param var_subgroup a subgroup variable in \code{design} data to add 2 curves 
 #' on plot for each subgroup. Default is \code{NULL}.
-#' @param plotChoice to choose which type of plot (either \code{"Patient medians"} or 
-#' \code{"Individual"}). Default is \code{"Patient medians"}. 
+#' @param plotChoice to choose which type of plot (either \code{"Medians"}, 
+#' \code{"Individual"} or both). Default is \code{c("Medians", "Individual")}. 
+#' @param loess_span smoothing span. Default is \code{0.75}.
 #' 
 #' @return a ggplot2 plot object 
 #'
@@ -27,30 +28,35 @@
 #' 
 #' @examples
 #' data(baduel_5gs) 
-#' expr_norm_corr <- as.data.frame(expr_norm_corr)
-#'
-#' library(dplyr)
+#' design$Indiv <- design$Population:design$Replicate
+#' design$Vern <- ifelse(design$Vernalized, "Vernalized", "Non-vernalized")
+#' se <- SummarizedExperiment(assay = log2(expr_norm_corr+1), colData = design)
 #' 
-#' #Remove "Vernalized" columns 
-#' expr_norm_corr <- expr_norm_corr %>% select(!ends_with("V")) 
-#' 
-#' #Change name of sample 
-#' colnames(design)[1] <- "SampleID"
-#' design <- design %>% filter(Vernalized == FALSE)
-#' #Modify the Population ID to obtain value of population for each replicate
-#' design <- design %>% mutate(PopulationID = Population:Replicate)
-#' 
-#' spaghettiPlot_1GS(gs_index = 3, gmt = baduel_gmt, expr_mat = expr_norm_corr, 
-#'   design = design, var_time = AgeWeeks, var_patient = PopulationID)
+#' spaghettiPlot1GS(gs_index = 3, gmt = baduel_gmt, expr_mat = assay(se), 
+#'   design = colData(se), var_time = AgeWeeks, var_indiv = Indiv, 
+#'   sampleIdColname = "sample", var_group=Vern, var_subgroup=Population, 
+#'   plotChoice = "Medians", loess_span= 1.5) +
+#'   xlab("Age (weeks)") + guides(color= "none")
 
-spaghettiPlot_1GS <- function(gs_index, gmt, expr_mat, design, var_time, 
-                              var_patient, var_group = NULL, var_subgroup = NULL, 
-                              plotChoice = c("Patient medians", "Individual")){ 
+spaghettiPlot1GS <- function(gs_index, gmt, expr_mat, design, var_time, 
+                             var_indiv, sampleIdColname, 
+                             var_group = NULL, var_subgroup = NULL, 
+                             plotChoice = c("Medians", "Individual"),
+                             loess_span = 0.75){ 
 
+  if(is.matrix(expr_mat)){
+    expr_mat <- as.data.frame(expr_mat)
+  }
+  stopifnot(is.data.frame(expr_mat))
+  if(class(design) == "DFrame"){
+    design <- as.data.frame(design)
+  }
+  stopifnot(is.data.frame(design))
+  
   #Before to call a tidy evaluation function (ggplot) inside of another function
   # use enquo() and !! before object of the function
   var_subgroup_tidy <- enquo(var_subgroup)
-  var_patient_tidy <- enquo(var_patient)
+  var_indiv_tidy <- enquo(var_indiv)
   var_time_tidy <- enquo(var_time)
   var_group_tidy <- enquo(var_group)
   
@@ -63,18 +69,21 @@ spaghettiPlot_1GS <- function(gs_index, gmt, expr_mat, design, var_time,
     tibble::rownames_to_column(var = "SYMBOL") %>% 
     dplyr::filter(!!SYMBOL_tidy %in% gmt$genesets[[gs_index]]) 
 
+  colnames(design)[which(colnames(design) == sampleIdColname)] <- "SampleID"
   data2plot <- reshape2::melt(gs_expr, value.name = "Normalized_Expression", 
                               variable.name = "SampleID", id.vars = "SYMBOL") %>% 
     dplyr::left_join(y = design, by = "SampleID") %>% 
     dplyr::mutate("SYMBOL" = as.factor(!!SYMBOL_tidy))
 
   data2plot <- data2plot %>% 
-    dplyr::mutate("group_line" = !!SYMBOL_tidy:!!var_patient_tidy)
+    dplyr::mutate("group_line" = !!SYMBOL_tidy:!!var_indiv_tidy)
   
   data2plot <- data2plot %>% 
-    dplyr::group_by(!!SYMBOL_tidy, !!var_group_tidy, !!var_subgroup_tidy, !!var_patient_tidy) %>% 
+    dplyr::group_by(!!SYMBOL_tidy, !!var_group_tidy, !!var_subgroup_tidy, 
+                    !!var_indiv_tidy) %>% 
     dplyr::mutate("Standardized_Expression" = ((!!Normalized_Expression_tidy - 
-                                               mean(!!Normalized_Expression_tidy, na.rm = TRUE)) / 
+                                               mean(!!Normalized_Expression_tidy, 
+                                                    na.rm = TRUE)) / 
                                                sd(!!Normalized_Expression_tidy)))
 
   data2plot_summ <- data2plot %>% dplyr::ungroup() %>% 
@@ -88,24 +97,26 @@ spaghettiPlot_1GS <- function(gs_index, gmt, expr_mat, design, var_time,
   #Plot of Patient medians
   p1 <- ggplot(data2plot_summ, aes_string(x = var_time_tidy, y = "Standardized_Expression")) +
     geom_line(aes_string(color = "SYMBOL", linetype = var_subgroup_tidy)) +
-    geom_smooth(aes_string(linetype = var_subgroup_tidy), color="black", se=FALSE, method = 'loess', formula = 'y ~ x') +
+    geom_smooth(aes_string(linetype = var_subgroup_tidy), color="black", 
+                se=FALSE, method = 'loess', formula = 'y ~ x', span = loess_span) +
     theme_bw() +
     scale_x_continuous(breaks = unique(var_time_vec)) +
     scale_color_discrete("Gene") + 
     guides(linetype = guide_legend(override.aes = list(size=1))) +
     ylab("Standardized expression") +
-    ggtitle("Patient medians")
+    ggtitle("Median across individuals")
 
 
   #Plot of Individual data
-  p2 <- ggplot(data2plot, aes_string(x = var_time_tidy, y = "Standardized_Expression")) +
+  p2 <- ggplot(data2plot, aes_string(x = var_time_tidy, 
+                                     y = "Standardized_Expression")) +
     geom_line(aes_string(group = "group_line", color = "SYMBOL", 
                          linetype = var_subgroup_tidy), alpha = 0.4) +
-    geom_smooth(aes_string(linetype = var_subgroup_tidy), color="black", se=FALSE, 
-                formula="y~x", method="loess") +
+    geom_smooth(aes_string(linetype = var_subgroup_tidy), color="black", 
+                se=FALSE, formula="y~x", method="loess", span = loess_span) +
     theme_bw() +
     scale_x_continuous(breaks = unique(var_time_vec)) +
-    ylab("Standardized expression") +
+    ylab("Standardized gene expression") +
     ggtitle("Individual data")
   
   #If there is var_group, add facet_wrap
@@ -115,19 +126,23 @@ spaghettiPlot_1GS <- function(gs_index, gmt, expr_mat, design, var_time,
   }
 
   #Combine the 2 plots 
-  pall <- p1/(p2 + guides(color = "none", linetype = "none")) + plot_layout(guides = 'collect') + 
-    plot_annotation(title = paste0(gmt$geneset.name[[gs_index]], ": ", gmt$geneset.description[[gs_index]]))
+  pall <- p1/(p2 + guides(color = "none", linetype = "none")) + 
+    plot_layout(guides = 'collect') + 
+    plot_annotation(title = paste0(gmt$geneset.name[[gs_index]], ": ", 
+                                   gmt$geneset.description[[gs_index]]))
   
   #Return plot according to plotChoice
-  if(identical(plotChoice, "Patient medians")){
+  if(identical(plotChoice, "Medians")){
     p1 <- p1 +
-          plot_annotation(title = paste0(gmt$geneset.name[[gs_index]], ": ", gmt$geneset.description[[gs_index]]))
+          plot_annotation(title = paste0(gmt$geneset.name[[gs_index]], ": ", 
+                                         gmt$geneset.description[[gs_index]]))
     return(p1)
   }else  if(identical(plotChoice, "Individual")){
     p2 <- p2 +    
           scale_color_discrete("Gene") + 
           guides(linetype = guide_legend(override.aes = list(size=1))) +
-          plot_annotation(title = paste0(gmt$geneset.name[[gs_index]], ": ", gmt$geneset.description[[gs_index]]))
+          plot_annotation(title = paste0(gmt$geneset.name[[gs_index]], ": ", 
+                                         gmt$geneset.description[[gs_index]]))
     return(p2)
   }else if(length(plotChoice) == 2){
     return(pall)
