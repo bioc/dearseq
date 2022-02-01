@@ -119,6 +119,7 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                 pv <- stats::pchisq(gene_scores_obs/gene_lambda, df = 1,
                                     lower.tail = FALSE)
             } else {
+                #browser()
                 pv <- mapply(FUN = survey::pchisqsum, 
                                  x = gene_scores_obs,
                                  df=1,
@@ -150,7 +151,7 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                 if (is.null(lam)){
                     lam <- tryCatch(svd(Sig_q_gene)$d, 
                                     error=function(cond){
-                                        warning("Error in svd decomposition for at least one ",
+                                        warning("SVD decomposition failed for at least one ",
                                                 "gene")
                                         return(NA)
                                     })
@@ -186,7 +187,7 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
         if (is.null(lam)) {
             lam <- tryCatch(svd(round(Sig_q, 6))$d, 
                             error=function(cond){
-                                stop("Error in svd decomposition")
+                                stop("SVD decomposition failed")
                             })
         }
         
@@ -196,6 +197,7 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                                     lower.tail = FALSE,
                                     method = "saddlepoint")
         
+        #browser()
         ans <- list("set_score_obs" = score_list$score, 
                     "set_pval" = dv)
     }

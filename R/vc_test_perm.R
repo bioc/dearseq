@@ -136,7 +136,7 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
     }
 
     if(adaptive){
-        message(paste("Performing", n_perm, "initial permutations for", nrow(y),  "genes"))
+        message("Performing ", n_perm, " initial permutations for ", nrow(y),  " genes")
     }
     score_list_res <- vc_score_2use(y = y, x = x, indiv = indiv_fact, phi = phi,
                                     w = w, Sigma_xi = Sigma_xi, na_rm = na.rm,
@@ -167,7 +167,7 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
         
         while(adaptive && (min(pvals_e)!=(0.05/length(pvals_e))) && 
               (length(ind_threshold)>1) && (n_perm_threshold <= max_adaptive)){
-            message(paste("  performing", n_perm_threshold, "additional permutations for", length(ind_threshold),  "genes"))
+            message("  performing ", n_perm_threshold, " additional permutations for ", length(ind_threshold),  " genes")
             score_list_res <- vc_score_2use(y = y[ind_threshold,], x = x, indiv = indiv_fact, phi = phi,
                                             w = w[ind_threshold,], Sigma_xi = Sigma_xi, na_rm = na.rm,
                                             n_perm = n_perm_threshold,
