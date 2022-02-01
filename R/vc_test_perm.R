@@ -136,7 +136,8 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
     }
 
     if(adaptive){
-        message("Performing ", n_perm, " initial permutations for ", nrow(y),  " genes")
+        message("Performing ", n_perm, " initial permutations for ", nrow(y), 
+                " genes")
     }
     score_list_res <- vc_score_2use(y = y, x = x, indiv = indiv_fact, phi = phi,
                                     w = w, Sigma_xi = Sigma_xi, na_rm = na.rm,
@@ -152,8 +153,8 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
         nperm_sup_obs <- rowSums(gene_scores_perm >= gene_scores_obs)
         #pvals_naive <- nperm_sup_obs/n_perm
         #pvals_u <- (nperm_sup_obs + 1)/(n_perm +1)
-        pvals_e <- permPvals(nperm_sup_obs, nperm_eff = n_perm,
-                           total_possible_nperm = N_possible_perms)
+        pvals_e <- permPvals(nPermSupObs = nperm_sup_obs, nPermEff = n_perm,
+                             totalPossibleNPerm = N_possible_perms)
         ind_threshold <- which(nperm_sup_obs<1)
         #ind_threshold <- as.numeric(which(pvals_e<=2/(n_perm/10)))
         n_perm_threshold <- n_perm
@@ -167,18 +168,25 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
         
         while(adaptive && (min(pvals_e)!=(0.05/length(pvals_e))) && 
               (length(ind_threshold)>1) && (n_perm_threshold <= max_adaptive)){
-            message("  performing ", n_perm_threshold, " additional permutations for ", length(ind_threshold),  " genes")
-            score_list_res <- vc_score_2use(y = y[ind_threshold,], x = x, indiv = indiv_fact, phi = phi,
-                                            w = w[ind_threshold,], Sigma_xi = Sigma_xi, na_rm = na.rm,
+            message("  performing ", n_perm_threshold, 
+                    " additional permutations for ", length(ind_threshold),  
+                    " genes")
+            score_list_res <- vc_score_2use(y = y[ind_threshold,], x = x, 
+                                            indiv = indiv_fact, phi = phi,
+                                            w = w[ind_threshold,], 
+                                            Sigma_xi = Sigma_xi, na_rm = na.rm,
                                             n_perm = n_perm_threshold,
                                             progressbar = progressbar,
                                             parallel_comp = parallel_comp,
                                             nb_cores = nb_cores)
             
-            gene_scores_perm_threshold <- cbind(gene_scores_perm_threshold[which(nperm_sup_obs_threshold<1),],score_list_res$gene_scores_unscaled_perm)
-            nperm_sup_obs_threshold <- rowSums(gene_scores_perm_threshold >= gene_scores_obs[ind_threshold])
-            pvals_e_threshold <- permPvals(nperm_sup_obs_threshold, nperm_eff = n_perm_threshold*2,
-                                         total_possible_nperm = N_possible_perms)
+            gene_scores_perm_threshold <- cbind(gene_scores_perm_threshold[which(nperm_sup_obs_threshold<1), ], 
+                                                score_list_res$gene_scores_unscaled_perm)
+            nperm_sup_obs_threshold <- rowSums(gene_scores_perm_threshold >= 
+                                                 gene_scores_obs[ind_threshold])
+            pvals_e_threshold <- permPvals(nPermSupObs = nperm_sup_obs_threshold, 
+                                           nPermEff = n_perm_threshold*2,
+                                           totalPossibleNPerm = N_possible_perms)
             
             pvals_e[ind_threshold] <- pvals_e_threshold
             ind_threshold <- ind_threshold[which(nperm_sup_obs_threshold<1)]
