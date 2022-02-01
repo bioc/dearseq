@@ -168,7 +168,7 @@
 #'@examples
 #'
 #'#Monte-Carlo estimation of the proportion of DE genes over `nsims` 
-#'simulations under the null
+#'#simulations under the null
 #'
 #'#number of runs
 #'nsims <- 2 #100 

@@ -192,7 +192,8 @@ Wrapper function for gene-by-gene association testing of RNA-seq data
 }
 \examples{
 
-#Monte-Carlo estimation of the proportion of DE genes over `nsims` simulations under the null
+#Monte-Carlo estimation of the proportion of DE genes over `nsims` 
+#simulations under the null
 
 #number of runs
 nsims <- 2 #100 
@@ -261,8 +262,8 @@ summary(res_genes$pvals)
 \references{
 Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). dearseq: 
 a variance component score test for RNA-Seq differential analysis that 
-effectivelycontrols the false discovery rate, \emph{NAR Genomics and Bioinformatics}, 
-2(4):lqaa093.
+effectivelycontrols the false discovery rate, 
+\emph{NAR Genomics and Bioinformatics}, 2(4):lqaa093.
 \href{https://doi.org/10.1093/nargab/lqaa093}{DOI: 10.1093/nargab/lqaa093}.
 \href{https://www.biorxiv.org/content/10.1101/635714}{DOI: 10.1101/635714}
 }

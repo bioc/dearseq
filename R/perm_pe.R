@@ -8,10 +8,10 @@
 #'
 #'@author Belinda Phipson and Gordon Smyth (adapted by Boris Hejblum)
 #'
-#'@param nperm_supobs number of permutations that yielded test statistics at
+#'@param nPermSupObs number of permutations that yielded test statistics at
 #'least as extreme as the observed data. Can be a vector or an array of values.
-#'@param nperm_eff number of permutations effectively computed.
-#'@param total_possible_nperm total number of permutations possible.
+#'@param nPermEff number of permutations effectively computed.
+#'@param totalPossibleNPerm total number of permutations possible.
 #'
 #'@references Phipson B, and Smyth GK (2010). Permutation p-values should never
 #'be zero: calculating exact p-values when permutations are randomly drawn.
@@ -27,27 +27,27 @@
 #'of exact p-values
 #'
 #'@examples
-#'perm_pe(10, 100, 1000)
+#'permPvals(10, 100, 1000)
 #'
 #'@export
 
-perm_pe <- function(nperm_supobs, nperm_eff, total_possible_nperm) {
+permPvals <- function(nPermSupObs, nPermEff, totalPossibleNPerm) {
 
     ## (slightly) adapted from the implementation by Belinda Phipson and
     ## Gordon Smyth from the R package statmod
 
     nbnodes_quad <- 128
     z <- statmod::gauss.quad.prob(n = nbnodes_quad, l = 0,
-                                  u = 0.5/total_possible_nperm)
-    npvals <- length(nperm_supobs)
+                                  u = 0.5/totalPossibleNPerm)
+    npvals <- length(nPermSupObs)
     prob <- rep(z$nodes, npvals)
-    x2 <- rep(nperm_supobs, each = nbnodes_quad)
-    Y <- matrix(data = stats::pbinom(x2, prob = prob, size = nperm_eff),
+    x2 <- rep(nPermSupObs, each = nbnodes_quad)
+    Y <- matrix(data = stats::pbinom(x2, prob = prob, size = nPermEff),
                 nrow = nbnodes_quad,
                 ncol = npvals)
-    int <- 0.5/total_possible_nperm * colSums(z$weights * Y)
+    int <- 0.5/totalPossibleNPerm * colSums(z$weights * Y)
 
-    pe <- (nperm_supobs + 1)/(nperm_eff + 1) - int
+    pe <- (nPermSupObs + 1)/(nPermEff + 1) - int
 
     return(pe)
 }
