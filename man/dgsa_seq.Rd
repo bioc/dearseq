@@ -24,7 +24,6 @@ dgsa_seq(
   bw = "nrd",
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "tricube", "cosine", "optcosine"),
-  exact = FALSE,
   transform = TRUE,
   padjust_methods = c("BH", "BY", "holm", "hochberg", "hommel", "bonferroni"),
   lowess_span = 0.5,
@@ -147,12 +146,6 @@ Possibilities are \code{'gaussian'}, \code{'epanechnikov'},
 \code{'tricube'}, \code{'cosine'}, \code{'optcosine'}. Default is
 \code{'gaussian'} (NB: \code{'tricube'} kernel
 corresponds to the loess method).}
-
-\item{exact}{a logical flag indicating whether the non-parametric weights
-accounting for the mean-variance relationship should be computed exactly or
-extrapolated from the interpolation of local regression of the mean against
-the variance. Default is \code{FALSE}, which uses interpolation (faster
-computation).}
 
 \item{transform}{a logical flag used for \code{'loclin'} weights, indicating
 whether values should be transformed to uniform for the purpose of local

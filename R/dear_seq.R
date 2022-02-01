@@ -98,12 +98,6 @@
 #'\code{'gaussian'} (NB: \code{'tricube'} kernel corresponds to the loess
 #'method).
 #'
-#'@param exact a logical flag indicating whether the non-parametric weights
-#'accounting for the mean-variance relationship should be computed exactly or
-#'extrapolated from the interpolation of local regression of the mean against
-#'the variance. Default is \code{FALSE}, which uses interpolation (faster
-#'computation).
-#'
 #'@param transform a logical flag used for \code{'loclin'} weights, indicating
 #'whether values should be transformed to uniform for the purpose of local
 #'linear smoothing. This may be helpful if tail observations are sparse and the
@@ -166,14 +160,15 @@
 #'
 #'@references Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). dearseq: 
 #'a variance component score test for RNA-Seq differential analysis that 
-#'effectivelycontrols the false discovery rate, \emph{NAR Genomics and Bioinformatics}, 
-#'2(4):lqaa093.
+#'effectivelycontrols the false discovery rate, 
+#'\emph{NAR Genomics and Bioinformatics}, 2(4):lqaa093.
 #'\href{https://doi.org/10.1093/nargab/lqaa093}{DOI: 10.1093/nargab/lqaa093}.
 #'\href{https://www.biorxiv.org/content/10.1101/635714}{DOI: 10.1101/635714}
 #'
 #'@examples
 #'
-#'#Monte-Carlo estimation of the proportion of DE genes over `nsims` simulations under the null
+#'#Monte-Carlo estimation of the proportion of DE genes over `nsims` 
+#'simulations under the null
 #'
 #'#number of runs
 #'nsims <- 2 #100 
@@ -256,7 +251,6 @@ dear_seq <- function(exprmat = NULL, object = NULL,
                      kernel = c("gaussian", "epanechnikov", "rectangular",
                                 "triangular", "biweight", "tricube", "cosine",
                                 "optcosine"),
-                     exact = FALSE,
                      transform = TRUE,
                      padjust_methods = c("BH", "BY", "holm", "hochberg",
                                          "hommel", "bonferroni"),
@@ -281,7 +275,6 @@ dear_seq <- function(exprmat = NULL, object = NULL,
                  gene_based_weights = gene_based_weights,
                  bw = bw,
                  kernel = kernel,
-                 exact = exact,
                  transform = transform,
                  padjust_methods = padjust_methods,
                  lowess_span = lowess_span,

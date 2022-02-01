@@ -14,7 +14,6 @@ sp_weights(
   bw = c("nrd", "ucv", "SJ", "nrd0", "bcv"),
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "tricube", "cosine", "optcosine"),
-  exact = FALSE,
   transform = TRUE,
   verbose = TRUE,
   na.rm = FALSE
@@ -55,11 +54,6 @@ Possibilities are \code{'gaussian'}, \code{'epanechnikov'},
 \code{'tricube'}, \code{'cosine'}, \code{'optcosine'}. Default is
 \code{'gaussian'} (NB: \code{'tricube'} kernel corresponds to the loess
 method).}
-
-\item{exact}{a logical flag indicating whether the non-parametric weights
-accounting for the mean-variance relationship should be computed exactly or
-extrapolated from the interpolation of local regression of the mean against
-the variance. Default is \code{FALSE}, which uses interpolation (faster).}
 
 \item{transform}{a logical flag indicating whether values should be
 transformed to uniform for the purpose of local linear smoothing. This may be

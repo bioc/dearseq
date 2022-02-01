@@ -114,12 +114,6 @@
 #'\code{'gaussian'} (NB: \code{'tricube'} kernel
 #'corresponds to the loess method).
 #'
-#'@param exact a logical flag indicating whether the non-parametric weights
-#'accounting for the mean-variance relationship should be computed exactly or
-#'extrapolated from the interpolation of local regression of the mean against
-#'the variance. Default is \code{FALSE}, which uses interpolation (faster
-#'computation).
-#'
 #'@param transform a logical flag used for \code{'loclin'} weights, indicating
 #'whether values should be transformed to uniform for the purpose of local
 #'linear smoothing. This may be helpful if tail observations are sparse and the
@@ -270,7 +264,6 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
                      kernel = c("gaussian", "epanechnikov", "rectangular",
                                 "triangular", "biweight", "tricube", "cosine",
                                 "optcosine"),
-                     exact = FALSE,
                      transform = TRUE,
                      padjust_methods = c("BH", "BY", "holm", "hochberg",
                                          "hommel", "bonferroni"),
@@ -298,7 +291,9 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
             stopifnot(!is.null(object$samples))
             stopifnot(nrow(object$samples)==ncol(object$counts))
             y <- object$counts
-            design_df <- as.data.frame(object$samples[, c(covariates, variables2test), drop=FALSE])
+            design_df <- as.data.frame(object$samples[, c(covariates, 
+                                                          variables2test), 
+                                                      drop=FALSE])
         }else if(is(object, "DESeqDataSet")){
             if(!requireNamespace("DESeq2", quietly = TRUE)){
                 stop("DESeq2 package required but is not available")
@@ -368,7 +363,8 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
                 "you should think carefully about where do those NA/NaN ",
                 "come from...\nIf you don't want to ignore those NA/NaN ",
                 "values, set the 'na.rm_gsaseq' argument to 'FALSE' ",
-                "(this may lead to errors).")
+                "(this has not been fuully tested ", 
+                "and should be used with extreme care).")
     }
     
     if(is.null(cov_variables2test_eff)){
@@ -476,7 +472,7 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
                                          preprocessed = TRUE,
                                          gene_based = gene_based_weights,
                                          bw = bw, kernel = kernel, 
-                                         exact = exact, transform = transform, 
+                                         transform = transform, 
                                          verbose = verbose,
                                          na.rm = na.rm_gsaseq),
                      voom = voom_weights(y = y_lcpm, 
@@ -539,7 +535,8 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
                                         parallel_comp = parallel_comp,
                                         nb_cores = nb_cores,
                                         genewise_pvals = TRUE,
-                                        adaptive = adaptive, max_adaptive = max_adaptive,
+                                        adaptive = adaptive, 
+                                        max_adaptive = max_adaptive,
                                         homogen_traj = homogen_traj,
                                         na.rm = na.rm_gsaseq)
             rawPvals <- perm_result$gene_pvals
@@ -657,6 +654,9 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
                             "transcript: associated p-value cannot be computed")
                     NA
                 } else {
+                  if(verbose){
+                    message("Analyzing gene set ", i_gs)
+                  }
                     vc_test_perm(y = y_lcpm[gs, , drop = FALSE], x = x, 
                                  indiv = sample_group,
                                  phi = phi, w = w[gs, , drop = FALSE],
@@ -666,7 +666,8 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
                                  parallel_comp = parallel_comp,
                                  nb_cores = nb_cores,
                                  genewise_pvals = FALSE,
-                                 adaptive = adaptive, max_adaptive = max_adaptive,
+                                 adaptive = adaptive, 
+                                 max_adaptive = max_adaptive,
                                  homogen_traj = homogen_traj,
                                  na.rm = na.rm_gsaseq
                     )$set_pval

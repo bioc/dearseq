@@ -4,22 +4,11 @@
 \name{dearseq-package}
 \alias{dearseq}
 \alias{dearseq-package}
-\title{dearseq: Differential Expression Analysis for RNA-seq data through a robust 
-       variance component test}
+\title{dearseq: Differential Expression Analysis for RNA-seq data through a robust variance component test}
 \description{
 \if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
 
-Differential Expression Analysis RNA-seq data with variance 
-             component score test accounting for data heteroscedasticity through
-             precision weights. Perform both gene-wise and gene set analyses, 
-             and can deal with repeated or longitudinal data. Methods are 
-             detailed in: i) Agniel D & Hejblum BP (2017) Variance component score 
-             test for time-course gene set analysis of longitudinal RNA-seq 
-             data, Biostatistics, 18(4):589-604 ; and ii) Gauthier M, Agniel D, 
-             Thiébaut R & Hejblum BP (2020) dearseq: a variance component 
-             score test for RNA-Seq differential analysis that effectively 
-             controls the false discovery rate, NAR Genomics and Bioinformatics,
-             2(4):lqaa093.
+Differential Expression Analysis RNA-seq data with variance component score test accounting for data heteroscedasticity through precision weights. Perform both gene-wise and gene set analyses, and can deal with repeated or longitudinal data. Methods are detailed in: i) Agniel D & Hejblum BP (2017) Variance component score test for time-course gene set analysis of longitudinal RNA-seq data, Biostatistics, 18(4):589-604 ; and ii) Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020) dearseq: a variance component score test for RNA-Seq differential analysis that effectively controls the false discovery rate, NAR Genomics and Bioinformatics, 2(4):lqaa093.
 }
 \details{
 Analysis of RNA-seq data with variance component score
@@ -65,6 +54,11 @@ Authors:
 \itemize{
   \item Denis Agniel \email{denis.agniel@gmail.com}
   \item Marine Gauthier \email{marine.gauthier@u-bordeaux.fr}
+}
+
+Other contributors:
+\itemize{
+  \item Mélanie Huchon \email{melanie.huchon@u-bordeaux.fr} [contributor]
 }
 
 }

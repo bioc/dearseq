@@ -38,11 +38,6 @@
 #'\code{'gaussian'} (NB: \code{'tricube'} kernel corresponds to the loess
 #'method).
 #'
-#'@param exact a logical flag indicating whether the non-parametric weights
-#'accounting for the mean-variance relationship should be computed exactly or
-#'extrapolated from the interpolation of local regression of the mean against
-#'the variance. Default is \code{FALSE}, which uses interpolation (faster).
-#'
 #'@param transform a logical flag indicating whether values should be
 #'transformed to uniform for the purpose of local linear smoothing. This may be
 #'helpful if tail observations are sparse and the specified bandwidth gives
@@ -99,7 +94,7 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
                        kernel = c("gaussian", "epanechnikov", "rectangular",
                                   "triangular", "biweight", "tricube", "cosine",
                                   "optcosine"),
-                       exact = FALSE, transform = TRUE, verbose = TRUE,
+                       transform = TRUE, verbose = TRUE,
                        na.rm = FALSE) {
     
     
@@ -183,7 +178,6 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
         if (N < 2) {
             stop("need at least 2 points to select a bandwidth automatically")
         }
-        if (!exact) {
             bw <- switch(bw,
                          nrd0 = stats::bw.nrd0(as.vector(mu_x)),
                          nrd = stats::bw.nrd(as.vector(mu_x)),
@@ -194,7 +188,7 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
                               "must be among 'nrd0', 'nrd', 'ucv',",
                               "'bcv', 'SJ'")
             )
-        }
+        
         if (verbose) {
             message("\nBandwith computed.\n")
         }
@@ -271,24 +265,12 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
             sum(l * v)
         }
         
-        kern_fit <- NULL
-        if (exact) {
-            
-            message("'exact' is TRUE: the computation may take up to a",
-                    "couple minutes...", "\n", "Set 'exact = FALSE' for",
-                    "quicker computation of the weights using smoothing\n")
-            
-            weights <- t(matrix(1/unlist(lapply(as.vector(mu_x), w)), ncol = n,
-                                nrow = p, byrow = FALSE))
-            if (sum(!is.finite(weights)) > 0) {
-                warning("At least 1 non finite weight. ",
-                        "Try to increase the bandwith")
-            }
-        } else {
-            kern_fit <- vapply(mu_x, w, FUN.VALUE = 1.1)
-            weights <- 1/matrix(kern_fit, nrow = n, ncol = p, byrow = TRUE)
-            # f_interp <- stats::approxfun(x = mu_avg, kern_fit, rule = 2)
-            # weights <- 1/apply(mu, 2, f_interp)
+        
+        kern_fit <- vapply(mu_x, w, FUN.VALUE = 1.1)
+        weights <- 1/matrix(kern_fit, nrow = n, ncol = p, byrow = TRUE)
+        if (sum(!is.finite(weights)) > 0) {
+          warning("At least 1 non finite weight. ",
+                  "Try to increase the bandwith")
         }
 
     } else {
@@ -310,8 +292,7 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
         weights <- matrix(w, nrow(mu_x), ncol(mu_x))
     }
     if(sum(weights<0)>1){
-        stop("negative variance weights estimated: please contact the authors",
-             "of the package")
+        stop("negative variance weights estimated")
     }
     
     colnames(weights) <- colnames(y_lcpm)
