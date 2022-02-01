@@ -152,7 +152,7 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
         nperm_sup_obs <- rowSums(gene_scores_perm >= gene_scores_obs)
         #pvals_naive <- nperm_sup_obs/n_perm
         #pvals_u <- (nperm_sup_obs + 1)/(n_perm +1)
-        pvals_e <- perm_pe(nperm_sup_obs, nperm_eff = n_perm,
+        pvals_e <- permPvals(nperm_sup_obs, nperm_eff = n_perm,
                            total_possible_nperm = N_possible_perms)
         ind_threshold <- which(nperm_sup_obs<1)
         #ind_threshold <- as.numeric(which(pvals_e<=2/(n_perm/10)))
@@ -177,7 +177,7 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
             
             gene_scores_perm_threshold <- cbind(gene_scores_perm_threshold[which(nperm_sup_obs_threshold<1),],score_list_res$gene_scores_unscaled_perm)
             nperm_sup_obs_threshold <- rowSums(gene_scores_perm_threshold >= gene_scores_obs[ind_threshold])
-            pvals_e_threshold <- perm_pe(nperm_sup_obs_threshold, nperm_eff = n_perm_threshold*2,
+            pvals_e_threshold <- permPvals(nperm_sup_obs_threshold, nperm_eff = n_perm_threshold*2,
                                          total_possible_nperm = N_possible_perms)
             
             pvals_e[ind_threshold] <- pvals_e_threshold
