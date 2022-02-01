@@ -201,10 +201,11 @@ countCheck <- cpm > 2
 keep <- which(rowSums(countCheck) >= 5)
 London_raw <- London_raw[keep,]
 
-res_dearseq <- dearseq::dear_seq(object = se_raw[, se_raw$Status != "LTBI"],
+res_dearseq <- dearseq::dear_seq(object = se_raw[ , se_raw$Status != "LTBI"],
                                  variables2test = "Status",
                                  which_test='permutation',
-                                 preprocessed=FALSE)
+                                 preprocessed=FALSE, 
+                                 parallel_comp = interactive())
 
 summary(res_dearseq)
 plot(res_dearseq)
@@ -236,7 +237,8 @@ KAvsTBG <- dearseq::dgsa_seq(object = se2[genes_non0var_ind, ],
                              genesets=baduel_gmt$genesets[c(3,5)],
                              which_test = 'permutation', which_weights = 'loclin',
                              n_perm=2000, preprocessed = TRUE,
-                             verbose = FALSE)
+                             verbose = FALSE, 
+                             parallel_comp = interactive())
 summary(KAvsTBG)
 KAvsTBG$pvals
 
@@ -246,11 +248,23 @@ Cold <- dearseq::dgsa_seq(object = se2[genes_non0var_ind, ],
                           genesets = baduel_gmt$genesets[c(3,5)],
                           which_test = 'permutation', which_weights = 'loclin',
                           n_perm = 2000, preprocessed = TRUE, 
-                          verbose = FALSE)
+                          verbose = FALSE, 
+                          parallel_comp = interactive())
 summary(Cold)
 Cold$pvals
 ```
 
+We can also visualize the (pseudo-)longitudinal expression within a gene set:
+```{r, fig.width = 8, fig.asp = .8}
+#Remove "non-vernalized" samples
+se2@colData$Indiv <- se2@colData$Population:se2@colData$Replicate
+se2@colData$Vern <- ifelse(se2@colData$Vernalized, "Vernalized", "Non-vernalized")
+
+spaghettiPlot1GS(gs_index = 3, gmt = baduel_gmt, expr_mat = assay(se2), 
+  design = colData(se2), var_time = AgeWeeks, var_indiv = Indiv, 
+  sampleIdColname = "sample", var_group=Vern, var_subgroup=Population) +
+  xlab("Age (weeks)")
+```
 
 
 
