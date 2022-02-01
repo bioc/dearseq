@@ -53,7 +53,7 @@ spaghettiPlot1GS <- function(gs_index, gmt, expr_mat, design, var_time,
     expr_mat <- as.data.frame(expr_mat)
   }
   stopifnot(is.data.frame(expr_mat))
-  if(class(design) == "DFrame"){
+  if(is(design, "DFrame")){
     design <- as.data.frame(design)
   }
   stopifnot(is.data.frame(design))
