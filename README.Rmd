@@ -14,12 +14,11 @@ knitr::opts_chunk$set(
 
 # `dearseq` <a><img src='man/figures/logo.svg' align="right" height="139" /></a>
 
-<!-- [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dearseq)](https://cran.r-project.org/package=dearseq) -->
 [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/dearseq.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/dearseq)
-[![R-CMD-check](https://github.com/borishejblum/dearseq/workflows/R-CMD-check/badge.svg)](https://github.com/borishejblum/dearseq/actions)
-<!-- [![Travis-CI Build Status](https://travis-ci.org/borishejblum/dearseq.svg?branch=master)](https://travis-ci.org/borishejblum/dearseq) -->
-<!-- [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/borishejblum/dearseq?branch=master&svg=true)](https://ci.appveyor.com/project/borishejblum/dearseq) -->
+[![BioC dev status](http://www.bioconductor.org/shields/build/devel/bioc/dearseq.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/dearseq)
+[![R build status](https://github.com/borishejblum/dearseq/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/borishejblum/dearseq/actions)
 [![Codecov test coverage](https://codecov.io/gh/borishejblum/dearseq/branch/master/graph/badge.svg)](https://codecov.io/gh/borishejblum/dearseq?branch=master)
+[![Download](http://www.bioconductor.org/shields/downloads/release/dearseq.svg)](https://bioconductor.org/packages/stats/bioc/dearseq)
 <!-- [![Downloads](https://cranlogs.r-pkg.org/badges/dearseq?color=blue)](https://www.r-pkg.org/pkg/dearseq) -->
 
 
