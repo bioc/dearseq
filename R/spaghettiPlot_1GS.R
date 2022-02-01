@@ -35,10 +35,9 @@
 #' data(baduel_5gs) 
 #' design$Indiv <- design$Population:design$Replicate
 #' design$Vern <- ifelse(design$Vernalized, "Vernalized", "Non-vernalized")
-#' se <- SummarizedExperiment(assay = log2(expr_norm_corr+1), colData = design)
 #' 
-#' spaghettiPlot1GS(gs_index = 3, gmt = baduel_gmt, expr_mat = assay(se), 
-#'   design = colData(se), var_time = AgeWeeks, var_indiv = Indiv, 
+#' spaghettiPlot1GS(gs_index = 3, gmt = baduel_gmt, expr_mat = log2(expr_norm_corr+1), 
+#'   design = design, var_time = AgeWeeks, var_indiv = Indiv, 
 #'   sampleIdColname = "sample", var_group=Vern, var_subgroup=Population, 
 #'   plotChoice = "Medians", loess_span= 1.5) +
 #'   xlab("Age (weeks)") + guides(color= "none")
