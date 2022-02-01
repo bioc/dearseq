@@ -1,12 +1,17 @@
 #' Spaghetti plot for Specific Gene Set
 #'
 #' @param gs_index index of the specific gene set in \code{gmt}. 
-#' @param gmt a \code{list} of elements : geneset, geneset.name and geneset.description.
-#' @param expr_mat a data frame with numerics of size \code{G x n} contraining the 
-#' raw RNA-seq counts from \code{n} samples for \code{G} genes.
-#' @param design a data frame containing the information of each sample (SampleID).
-#' @param var_time the \code{time} or \code{visit} variable contained in \code{design} data.
+#' @param gmt a \code{list} of elements: \code{geneset}, \code{geneset.name} and
+#'  \code{geneset.description} (see \code{\link[GSA]{GSA.read.gmt}}).
+#' @param expr_mat a \code{data.frame} with numerics of size \code{G x n} 
+#' contraining the raw RNA-seq counts from \code{n} samples for \code{G} genes.
+#' @param design a \code{data.frame} or \code{DFrame} containing the information 
+#' of each sample (SampleID).
+#' @param var_time the \code{time} or \code{visit} variable contained in 
+#' \code{design}.
 #' @param var_indiv the patient variable contained in \code{design} data.
+#' @param sampleIdColname a character string indicating the name of the sample ID 
+#' variable in \code{design} to be matched with the \code{colnames} of \code{expr_mat}
 #' @param var_group a group variable in \code{design} data to divide into two 
 #' facets. Default is \code{NULL}.
 #' @param var_subgroup a subgroup variable in \code{design} data to add 2 curves 

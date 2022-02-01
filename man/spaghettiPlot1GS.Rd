@@ -21,16 +21,22 @@ spaghettiPlot1GS(
 \arguments{
 \item{gs_index}{index of the specific gene set in \code{gmt}.}
 
-\item{gmt}{a \code{list} of elements : geneset, geneset.name and geneset.description.}
+\item{gmt}{a \code{list} of elements: \code{geneset}, \code{geneset.name} and
+\code{geneset.description} (see \code{\link[GSA]{GSA.read.gmt}}).}
 
-\item{expr_mat}{a data frame with numerics of size \code{G x n} contraining the 
-raw RNA-seq counts from \code{n} samples for \code{G} genes.}
+\item{expr_mat}{a \code{data.frame} with numerics of size \code{G x n} 
+contraining the raw RNA-seq counts from \code{n} samples for \code{G} genes.}
 
-\item{design}{a data frame containing the information of each sample (SampleID).}
+\item{design}{a \code{data.frame} or \code{DFrame} containing the information 
+of each sample (SampleID).}
 
-\item{var_time}{the \code{time} or \code{visit} variable contained in \code{design} data.}
+\item{var_time}{the \code{time} or \code{visit} variable contained in 
+\code{design}.}
 
 \item{var_indiv}{the patient variable contained in \code{design} data.}
+
+\item{sampleIdColname}{a character string indicating the name of the sample ID 
+variable in \code{design} to be matched with the \code{colnames} of \code{expr_mat}}
 
 \item{var_group}{a group variable in \code{design} data to divide into two 
 facets. Default is \code{NULL}.}
