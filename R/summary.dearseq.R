@@ -41,7 +41,7 @@ summary.dearseq <- function(object, signif_threshold = 0.05, ...){
 #'@export
 print.summary.dearseq <- function(x, ...){
   if(x$gsa){
-    cat(paste("dearseq identifies", x$n_signif, "significant genes sets out of", x$n_tests, "\n"))
+    cat(paste("dearseq identifies", x$n_signif, "significant gene sets out of", x$n_tests, "\n"))
   }else{
     cat(paste("dearseq identifies", x$n_signif, "significant genes out of", x$n_tests, "\n"))
   }
