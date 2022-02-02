@@ -13,6 +13,6 @@
 ## Changes in version 1.2.0 (2020-05-20):  
  * adding adaptive permutations
 
-## Initial release Version 1.0.0 (2019-11-26):  
+## Initial release - version 1.0.0 (2019-11-26):  
  * this is a reboot of the tcgsaseq package
 
