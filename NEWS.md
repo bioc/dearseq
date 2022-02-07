@@ -1,4 +1,4 @@
-CHANGES IN VERSION 1.6.0 (2022-01-31):
+CHANGES IN VERSION 1.7.1 (2022-02-07):
 --------------------------------------
  + added a spaghetti plot functionality
 
