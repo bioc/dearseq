@@ -96,224 +96,235 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
                                   "optcosine"),
                        transform = TRUE, verbose = TRUE,
                        na.rm = FALSE) {
-    
-    
-    ## dimensions & validity checks
-    
-    stopifnot(is.matrix(y))
-    stopifnot(is.matrix(x))
-    stopifnot(is.null(phi) | is.matrix(phi))
-    
-    g <- nrow(y)  # the number of genes measured
-    n <- ncol(y)  # the number of samples measured
-    qq <- ncol(x)  # the number of covariates
-    stopifnot(nrow(x) == n)
-    if(use_phi){
-        stopifnot(nrow(phi) == n)
+  
+  
+  ## dimensions & validity checks
+  
+  stopifnot(is.matrix(y))
+  stopifnot(is.matrix(x))
+  stopifnot(is.null(phi) | is.matrix(phi))
+  
+  g <- nrow(y)  # the number of genes measured
+  n <- ncol(y)  # the number of samples measured
+  qq <- ncol(x)  # the number of covariates
+  stopifnot(nrow(x) == n)
+  if(use_phi){
+    stopifnot(nrow(phi) == n)
+  }
+  
+  # removing genes never observed:
+  observed <- which(rowSums(y, na.rm = TRUE) != 0)
+  nb_g_sum0 <- length(observed) - g
+  if (nb_g_sum0 > 0) {
+    warning(nb_g_sum0, " y rows sum to 0 (i.e. are never observed)",
+            "and have been removed")
+  }
+  
+  kernel <- match.arg(kernel)
+  if (preprocessed) {
+    y_lcpm <- t(y[observed, ])
+  } else {
+    # transforming raw counts to log-counts per million (lcpm)
+    y_lcpm <- t(apply(y[observed, ], MARGIN = 2, function(v) {
+      log2((v + 0.5)/(sum(v) + 1) * 10^6)
+    }))
+  }
+  N <- length(y_lcpm)
+  p <- ncol(y_lcpm)
+  
+  
+  # fitting OLS to the lcpm
+  xphi <- if (use_phi) {
+    cbind(x, phi)
+  } else {
+    x
+  }
+  if (na.rm) {
+    y_lcpm0 <- y_lcpm
+    y_lcpm0[is.na(y_lcpm0)] <- 0
+    B_ols <- solve(crossprod(xphi)) %*% t(xphi) %*% y_lcpm0
+  } else {
+    B_ols <- solve(crossprod(xphi)) %*% t(xphi) %*% y_lcpm
+  }
+  mu <- xphi %*% B_ols
+  
+  sq_err <- (y_lcpm - mu)^2
+  lse <- log(sq_err)
+  v <- colMeans(sq_err, na.rm = na.rm)
+  mu_avg <- colMeans(mu, na.rm = na.rm)
+  
+  if (gene_based) {
+    mu_x <- mu_avg
+  } else {
+    mu_x <- mu
+    mu_x[is.na(y_lcpm)] <- NA
+  }
+  # transforming if necessary
+  if (transform) {
+    sd_mu <- sd(mu_x, na.rm = na.rm)
+    mean_mu <- mean(mu_x, na.rm = na.rm)
+    mu_x <- pnorm((mu_x - mean_mu)/sd_mu)
+    reverse_trans <- function(x) {
+      qnorm(x) * sd_mu + mean_mu
     }
-
-    # removing genes never observed:
-    observed <- which(rowSums(y, na.rm = TRUE) != 0)
-    nb_g_sum0 <- length(observed) - g
-    if (nb_g_sum0 > 0) {
-        warning(nb_g_sum0, " y rows sum to 0 (i.e. are never observed)",
-                "and have been removed")
+  } else {
+    reverse_trans <- identity
+  }
+  
+  if (is.character(bw)) {
+    if (length(bw > 1)) {
+      bw <- bw[1]
     }
+    if (N < 2) {
+      stop("need at least 2 points to select a bandwidth automatically")
+    }
+    bw <- switch(bw,
+                 nrd0 = stats::bw.nrd0(as.vector(mu_x)),
+                 nrd = stats::bw.nrd(as.vector(mu_x)),
+                 ucv = stats::bw.ucv(as.vector(mu_x)),
+                 bcv = stats::bw.bcv(as.vector(mu_x)),
+                 SJ = stats::bw.SJ(as.vector(mu_x), method = "ste"),
+                 stop("unknown bandwidth rule: 'bw' argument",
+                      "must be among 'nrd0', 'nrd', 'ucv',",
+                      "'bcv', 'SJ'")
+    )
     
-    kernel <- match.arg(kernel)
-    if (preprocessed) {
-        y_lcpm <- t(y[observed, ])
-    } else {
-        # transforming raw counts to log-counts per million (lcpm)
-        y_lcpm <- t(apply(y[observed, ], MARGIN = 2, function(v) {
-            log2((v + 0.5)/(sum(v) + 1) * 10^6)
-        }))
+    if (verbose) {
+      message("\nBandwith computed.\n")
     }
-    N <- length(y_lcpm)
-    p <- ncol(y_lcpm)
+  }
+  
+  if (!is.finite(bw)) {
+    stop("non-finite 'bw'")
+  }
+  if (bw <= 0) {
+    stop("'bw' is not positive")
+  }
+  
+  # choose kernel ----
+  if (kernel == "gaussian") {
+    kern_func <- function(x, bw) {
+      stats::dnorm(x, sd = bw)
+    }
+  } else if (kernel == "rectangular") {
+    kern_func2 <- function(x, bw) {
+      a <- bw * sqrt(3)
+      (abs(x) < a) * 0.5/a  #ifelse(abs(x) < a, 0.5/a, 0)
+      
+    }
+  } else if (kernel == "triangular") {
+    kern_func <- function(x, bw) {
+      h <- bw * sqrt(6)
+      ax <- abs(x)
+      (ax < h) * ((1 - ax/h)/h)
+    }
+  } else if (kernel == "tricube") {
+    kern_func <- function(x, bw) {
+      h <- bw * sqrt(243/35)
+      ax <- abs(x)
+      (ax < h) * (70/81 * (1 - (ax/h)^3)^3)/h
+    }
+  } else if (kernel == "epanechnikov") {
+    kern_func <- function(x, bw) {
+      h <- bw * sqrt(5)
+      ax <- abs(x)
+      (ax < h) * (3/4 * (1 - (ax/h)^2)/h)
+    }
+  } else if (kernel == "biweight") {
+    kern_func <- function(x, bw) {
+      h <- bw * sqrt(7)
+      ax <- abs(x)
+      (ax < h) * (15/16 * (1 - (ax/h)^2)^2/h)
+    }
+  } else if (kernel == "cosine") {
+    kern_func <- function(x, bw) {
+      h <- bw/sqrt(1/3 - 2/pi^2)
+      (abs(x) < h) * ((1 + cos(pi * x/h))/(2 * h))
+    }
+  } else if (kernel == "optcosine") {
+    kern_func <- function(x, bw) {
+      h <- bw/sqrt(1 - 8/pi^2)
+      (abs(x) < h) * (pi/4 * cos(pi * x/(2 * h))/h)
+    }
+  } else {
+    stop("unknown kernel: 'kernel' argument must be among",
+         "'gaussian', 'rectangular', 'triangular', 'epanechnikov',",
+         "'biweight', 'cosine', 'optcosine'")
+  }
+  
+  
+  if (gene_based) {
     
-    
-    # fitting OLS to the lcpm
-    xphi <- if (use_phi) {
-        cbind(x, phi)
-    } else {
-        x
-    }
-    if (na.rm) {
-        y_lcpm0 <- y_lcpm
-        y_lcpm0[is.na(y_lcpm0)] <- 0
-        B_ols <- solve(crossprod(xphi)) %*% t(xphi) %*% y_lcpm0
-    } else {
-        B_ols <- solve(crossprod(xphi)) %*% t(xphi) %*% y_lcpm
-    }
-    mu <- xphi %*% B_ols
-    
-    sq_err <- (y_lcpm - mu)^2
-    lse <- log(sq_err)
-    v <- colMeans(sq_err, na.rm = na.rm)
-    mu_avg <- colMeans(mu, na.rm = na.rm)
-    
-    if (gene_based) {
-        mu_x <- mu_avg
-    } else {
-        mu_x <- mu
-        mu_x[is.na(y_lcpm)] <- NA
-    }
-    # transforming if necessary
-    if (transform) {
-        sd_mu <- sd(mu_x, na.rm = na.rm)
-        mean_mu <- mean(mu_x, na.rm = na.rm)
-        mu_x <- pnorm((mu_x - mean_mu)/sd_mu)
-        reverse_trans <- function(x) {
-            qnorm(x) * sd_mu + mean_mu
-        }
-    } else {
-        reverse_trans <- identity
-    }
-    
-    if (is.character(bw)) {
-        if (length(bw > 1)) {
-            bw <- bw[1]
-        }
-        if (N < 2) {
-            stop("need at least 2 points to select a bandwidth automatically")
-        }
-            bw <- switch(bw,
-                         nrd0 = stats::bw.nrd0(as.vector(mu_x)),
-                         nrd = stats::bw.nrd(as.vector(mu_x)),
-                         ucv = stats::bw.ucv(as.vector(mu_x)),
-                         bcv = stats::bw.bcv(as.vector(mu_x)),
-                         SJ = stats::bw.SJ(as.vector(mu_x), method = "ste"),
-                         stop("unknown bandwidth rule: 'bw' argument",
-                              "must be among 'nrd0', 'nrd', 'ucv',",
-                              "'bcv', 'SJ'")
-            )
-        
-        if (verbose) {
-            message("\nBandwith computed.\n")
-        }
-    }
-    
-    if (!is.finite(bw)) {
-        stop("non-finite 'bw'")
-    }
-    if (bw <= 0) {
-        stop("'bw' is not positive")
-    }
-    
-    # choose kernel ----
-    if (kernel == "gaussian") {
-        kern_func <- function(x, bw) {
-            stats::dnorm(x, sd = bw)
-        }
-    } else if (kernel == "rectangular") {
-        kern_func2 <- function(x, bw) {
-            a <- bw * sqrt(3)
-            (abs(x) < a) * 0.5/a  #ifelse(abs(x) < a, 0.5/a, 0)
-            
-        }
-    } else if (kernel == "triangular") {
-        kern_func <- function(x, bw) {
-            h <- bw * sqrt(6)
-            ax <- abs(x)
-            (ax < h) * ((1 - ax/h)/h)
-        }
-    } else if (kernel == "tricube") {
-        kern_func <- function(x, bw) {
-            h <- bw * sqrt(243/35)
-            ax <- abs(x)
-            (ax < h) * (70/81 * (1 - (ax/h)^3)^3)/h
-        }
-    } else if (kernel == "epanechnikov") {
-        kern_func <- function(x, bw) {
-            h <- bw * sqrt(5)
-            ax <- abs(x)
-            (ax < h) * (3/4 * (1 - (ax/h)^2)/h)
-        }
-    } else if (kernel == "biweight") {
-        kern_func <- function(x, bw) {
-            h <- bw * sqrt(7)
-            ax <- abs(x)
-            (ax < h) * (15/16 * (1 - (ax/h)^2)^2/h)
-        }
-    } else if (kernel == "cosine") {
-        kern_func <- function(x, bw) {
-            h <- bw/sqrt(1/3 - 2/pi^2)
-            (abs(x) < h) * ((1 + cos(pi * x/h))/(2 * h))
-        }
-    } else if (kernel == "optcosine") {
-        kern_func <- function(x, bw) {
-            h <- bw/sqrt(1 - 8/pi^2)
-            (abs(x) < h) * (pi/4 * cos(pi * x/(2 * h))/h)
-        }
-    } else {
-        stop("unknown kernel: 'kernel' argument must be among",
-             "'gaussian', 'rectangular', 'triangular', 'epanechnikov',",
-             "'biweight', 'cosine', 'optcosine'")
-    }
-    
-    
-    if (gene_based) {
-        
-        w <- function(x) {
-            x_ctr <- (mu_x - x)
-            kernx <- kern_func(x_ctr, bw)
-            Sn1 <- kernx * x_ctr
-            #Sn2 <- Sn1 * x_ctr
-            b <- kernx * (sum(Sn1 * x_ctr) - x_ctr * sum(Sn1))
-            l <- b/sum(b)
-            sum(l * v)
-        }
-        
-        
-        kern_fit <- vapply(mu_x, w, FUN.VALUE = 1.1)
-        weights <- 1/matrix(kern_fit, nrow = n, ncol = p, byrow = TRUE)
-        if (sum(!is.finite(weights)) > 0) {
-          warning("At least 1 non finite weight. ",
-                  "Try to increase the bandwith")
-        }
-
-    } else {
-        if (!na.rm) {
-            stop("Cannot compute the weights without ignoring NA/NaN ",
-                 "values...\nTry setting 'na.rm' or na.rm_gsaseq' to 'TRUE' ",
-                 "to ignore NA/NaN values, but think carefully about where ",
-                 "does those NA/NaN come from...")
-        } else if (sum(is.na(mu_x)) > 1) {
-            mu_x <- mu_x[-which(is.na(mu_x))]
-            sq_err <- sq_err[-which(is.na(sq_err))]
-            lse <- lse[-which(is.na(lse))]
-        }
-        smth <- KernSmooth::locpoly(x = c(mu_x), y = c(lse), degree = 2,
-                                    kernel = kernel, bandwidth = bw)
-        w <- (1/exp(stats::approx(x = reverse_trans(smth$x), y = smth$y,
-                                  xout = reverse_trans(mu_x),
-                                  rule = 2)$y))
-        weights <- matrix(w, nrow(mu_x), ncol(mu_x))
-    }
-    if(sum(weights<0)>1){
-        stop("negative variance weights estimated")
+    w <- function(x) {
+      x_ctr <- (mu_x - x)
+      kernx <- kern_func(x_ctr, bw)
+      Sn1 <- kernx * x_ctr
+      #Sn2 <- Sn1 * x_ctr
+      b <- kernx * (sum(Sn1 * x_ctr) - x_ctr * sum(Sn1))
+      l <- b/sum(b)
+      sum(l * v)
     }
     
-    colnames(weights) <- colnames(y_lcpm)
-    rownames(weights) <- rownames(y_lcpm)
     
-
-    if(gene_based){
-        v_out <- v
-        smth_out <- kern_fit
-    }else{
-        v_out <- lse
-        smth_out <- smth
+    kern_fit <- vapply(mu_x, w, FUN.VALUE = 1.1)
+    weights <- 1/matrix(kern_fit, nrow = n, ncol = p, byrow = TRUE)
+    if (sum(!is.finite(weights)) > 0) {
+      warning("At least 1 non finite weight. ",
+              "Try to increase the bandwith")
     }
-    return(list("weights" = t(weights), 
-                "plot_utilities" = list("reverse_trans" = reverse_trans,
-                                        "method" = "loclin",
-                                        "smth" = smth_out,
-                                        "gene_based" = gene_based,
-                                        "mu" = mu_x,
-                                        "v" = v_out
-                )
-    ))
+    
+  } else {
+    
+    mu_x_fit <- mu_x
+    lse_fit <- lse
+    
+    na_mux <- which(is.na(mu_x))
+    if (!na.rm) {
+      stop("Cannot compute the weights without ignoring NA/NaN ",
+           "values...\nTry setting 'na.rm' or na.rm_gsaseq' to 'TRUE' ",
+           "to ignore NA/NaN values, but think carefully about where ",
+           "does those NA/NaN come from...")
+      
+    } else if (length(na_mux) > 0) {
+      mu_x_fit <- mu_x_fit[-na_mux]
+      lse_fit <- lse_fit[-na_mux]
+    }
+    
+    inf_lse <- which(is.infinite(lse_fit))
+    if(length(inf_lse) > 0){
+      mu_x_fit <- mu_x_fit[-inf_lse]
+      lse_fit <- lse_fit[-inf_lse]
+    }
+    smth <- KernSmooth::locpoly(x = c(mu_x_fit), y = c(lse_fit), degree = 2,
+                                kernel = kernel, bandwidth = bw)
+    w <- (1/exp(stats::approx(x = reverse_trans(smth$x), y = smth$y,
+                              xout = reverse_trans(mu_x),
+                              rule = 2)$y))
+    weights <- matrix(w, nrow(mu_x), ncol(mu_x))
+  }
+  if(sum(weights<0)>1){
+    stop("negative variance weights estimated")
+  }
+  
+  colnames(weights) <- colnames(y_lcpm)
+  rownames(weights) <- rownames(y_lcpm)
+  
+  
+  if(gene_based){
+    v_out <- v
+    smth_out <- kern_fit
+  }else{
+    v_out <- lse
+    smth_out <- smth
+  }
+  return(list("weights" = t(weights), 
+              "plot_utilities" = list("reverse_trans" = reverse_trans,
+                                      "method" = "loclin",
+                                      "smth" = smth_out,
+                                      "gene_based" = gene_based,
+                                      "mu" = mu_x,
+                                      "v" = v_out
+              )
+  ))
 }
 

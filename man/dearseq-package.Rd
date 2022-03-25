@@ -19,8 +19,8 @@ complex experimental designs such as longitudinal data.
 \tabular{ll}{
 Package: \tab dearseq\cr
 Type: \tab Package\cr
-Version: \tab 1.8.0\cr
-Date: \tab 2022-01-31\cr
+Version: \tab 1.7.1\cr
+Date: \tab 2022-02-07\cr
 License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 }
 The two main functions of the \code{dearseq} package are
