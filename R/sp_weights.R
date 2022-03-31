@@ -295,8 +295,10 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
       mu_x_fit <- mu_x_fit[-inf_lse]
       lse_fit <- lse_fit[-inf_lse]
     }
+    min_gridsize <- ceiling((max(mu_x_fit) - min(mu_x_fit))/(4*bw))+1
+    gridsize <- max(min_gridsize, 401)
     smth <- KernSmooth::locpoly(x = c(mu_x_fit), y = c(lse_fit), degree = 2,
-                                kernel = kernel, bandwidth = bw)
+                                kernel = kernel, bandwidth = bw, gridsize = gridsize)
     w <- (1/exp(stats::approx(x = reverse_trans(smth$x), y = smth$y,
                               xout = reverse_trans(mu_x),
                               rule = 2)$y))
