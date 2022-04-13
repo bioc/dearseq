@@ -307,7 +307,6 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
   if(sum(weights<0)>1){
     stop("negative variance weights estimated")
   }
-  
   colnames(weights) <- colnames(y_lcpm)
   rownames(weights) <- rownames(y_lcpm)
   
@@ -319,6 +318,7 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     v_out <- lse
     smth_out <- smth
   }
+  browser()
   return(list("weights" = t(weights), 
               "plot_utilities" = list("reverse_trans" = reverse_trans,
                                       "method" = "loclin",
