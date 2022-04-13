@@ -299,9 +299,21 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     gridsize <- max(min_gridsize, 401)
     smth <- KernSmooth::locpoly(x = c(mu_x_fit), y = c(lse_fit), degree = 2,
                                 kernel = kernel, bandwidth = bw, gridsize = gridsize)
-    w <- (1/exp(stats::approx(x = reverse_trans(smth$x), y = smth$y,
+    w <- exp(-stats::approx(x = reverse_trans(smth$x), y = smth$y,
                               xout = reverse_trans(mu_x),
-                              rule = 2)$y))
+                              rule = 2)$y)
+    cnt <- 0
+    while(sum(is.infinite(w)) > 0 & cnt < 5){
+      cnt <- cnt + 1
+      bw <- 2*bw
+      min_gridsize <- ceiling((max(mu_x_fit) - min(mu_x_fit))/(4*bw))+1
+      gridsize <- max(min_gridsize, 401)
+      smth <- KernSmooth::locpoly(x = c(mu_x_fit), y = c(lse_fit), degree = 2,
+                                  kernel = kernel, bandwidth = bw, gridsize = gridsize)
+      w <- exp(-stats::approx(x = reverse_trans(smth$x), y = smth$y,
+                              xout = reverse_trans(mu_x),
+                              rule = 2)$y)
+    }    
     weights <- matrix(w, nrow(mu_x), ncol(mu_x))
   }
   if(sum(weights<0)>1){
@@ -318,7 +330,7 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     v_out <- lse
     smth_out <- smth
   }
-  browser()
+  
   return(list("weights" = t(weights), 
               "plot_utilities" = list("reverse_trans" = reverse_trans,
                                       "method" = "loclin",
