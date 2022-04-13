@@ -1,3 +1,10 @@
+CHANGES IN VERSION 1.7.2 (2022-04-13):
+--------------------------------------
+ + reintroduced `CompQuadForm::davies()` as a longer alternative when the
+ `"saddlepoint"` method in `survey::pchisqsum()` fails for computing quadratic 
+ form asymptotic p-values
+ 
+ 
 CHANGES IN VERSION 1.7.1 (2022-02-07):
 --------------------------------------
  + added a spaghetti plot functionality

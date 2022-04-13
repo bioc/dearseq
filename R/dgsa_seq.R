@@ -363,7 +363,7 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
                 "you should think carefully about where do those NA/NaN ",
                 "come from...\nIf you don't want to ignore those NA/NaN ",
                 "values, set the 'na.rm_gsaseq' argument to 'FALSE' ",
-                "(this has not been fuully tested ", 
+                "(this has not been fully tested ", 
                 "and should be used with extreme care).")
     }
     
@@ -385,7 +385,7 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
     if (!preprocessed) {
         R <- colSums(y, na.rm = TRUE)
         y_lcpm <- apply(y, MARGIN = 2, function(v) {
-            log2((v + 0.5)/(sum(v) + 1) * 10^6)
+            log2((v + 0.5)/(sum(v, na.rm = TRUE) + 1) * 10^6)
         })
     } else {
         y_lcpm <- y

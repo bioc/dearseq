@@ -84,6 +84,7 @@
 #'quantile(asymTestRes$gene_pvals)
 #'
 #'@importFrom survey pchisqsum
+#'@importFrom CompQuadForm davies
 #'@importFrom stats pchisq cov
 #'@importFrom matrixStats colVars
 #'
@@ -114,30 +115,9 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
         if (nindiv == 1) {
             pv <- stats::pchisq(gene_scores_obs, df = 1, lower.tail = FALSE)
         } else if (nphi == 1) {
-            gene_lambda <- matrixStats::colVars(score_list$q_ext)
-            if (ng == 1) {
-                pv <- stats::pchisq(gene_scores_obs/gene_lambda, df = 1,
-                                    lower.tail = FALSE)
-            } else {
-                #browser()
-                pv <- mapply(FUN = survey::pchisqsum, 
-                                 x = gene_scores_obs,
-                                 df=1,
-                                 a = gene_lambda,
-                                 lower.tail=FALSE,
-                                 method = "saddlepoint"
-                )
-                
-                
-                ## pv <- unlist(mapply(FUN = CompQuadForm::davies,
-                ##                     q = gene_scores_obs,
-                ##                     lambda = gene_lambda, lim = 15000,
-                ##                     acc = 5e-04)["Qq", ])
-                ## old slow davies method  (somtimes accuracy issues with low p-vals)
-                
-                ## pv <- stats::pchisq(gene_scores_obs/gene_lambda, df = 1,
-                ## lower.tail = FALSE) # same result ? only if phi is univariate
-            }
+          gene_lambda <- matrixStats::colVars(score_list$q_ext)
+          pv <- stats::pchisq(gene_scores_obs/gene_lambda, df = 1,
+                              lower.tail = FALSE)
         } else {
             gene_inds <- lapply(seq_len(ng), function(x) {
                 x + (ng) * (seq_len(nphi) - 1)
@@ -158,14 +138,20 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                 }
                 return(lam)
             })
-            
-            pv <- mapply(FUN = survey::pchisqsum, 
-                         x = gene_scores_obs,
-                         df=1,
-                         a = gene_lambda,
-                         lower.tail=FALSE,
-                         method = "saddlepoint"
-            )
+            pv <- try(mapply(FUN = survey::pchisqsum, 
+                             x = gene_scores_obs,
+                             df=1,
+                             a = gene_lambda,
+                             lower.tail=FALSE,
+                             method = "saddlepoint"
+            ), silent = TRUE)
+            if(inherits(pv, "try-error")){
+              ## old slow CompQuadForm::davies method  (sometimes accuracy issues with low p-vals)
+              pv <- unlist(mapply(FUN = CompQuadForm::davies,
+                                  q = gene_scores_obs,
+                                  lambda = gene_lambda, lim = 15000,
+                                  acc = 5e-04)["Qq", ])
+            }
         }
         
         names(pv) <- rownames(y)
