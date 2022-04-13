@@ -318,6 +318,7 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     v_out <- lse
     smth_out <- smth
   }
+  browser()
   return(list("weights" = t(weights), 
               "plot_utilities" = list("reverse_trans" = reverse_trans,
                                       "method" = "loclin",
