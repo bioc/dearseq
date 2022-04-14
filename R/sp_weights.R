@@ -316,7 +316,7 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     }    
     weights <- matrix(w, nrow(mu_x), ncol(mu_x))
   }
-  if(sum(is.na(weights) < 1){
+  if(sum(is.na(weights)) < 1){
     if(sum(weights<0) > 0){
       stop("negative variance weights estimated")
     }
