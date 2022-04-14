@@ -303,7 +303,7 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
                               xout = reverse_trans(mu_x),
                               rule = 2)$y)
     cnt <- 0
-    while(sum(is.infinite(w)) > 0 & cnt < 5){
+    while((sum(is.na(w)) > 0 | sum(is.infinite(w)) > 0 ) & cnt < 5){
       cnt <- cnt + 1
       bw <- 2*bw
       min_gridsize <- ceiling((max(mu_x_fit) - min(mu_x_fit))/(4*bw))+1
@@ -316,9 +316,12 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     }    
     weights <- matrix(w, nrow(mu_x), ncol(mu_x))
   }
-  browser()
-  if(sum(weights<0)>1){
-    stop("negative variance weights estimated")
+  if(sum(is.na(weights) < 1){
+    if(sum(weights<0) > 0){
+      stop("negative variance weights estimated")
+    }
+  }else{
+    stop("NA variance weights estimated")
   }
   colnames(weights) <- colnames(y_lcpm)
   rownames(weights) <- rownames(y_lcpm)
