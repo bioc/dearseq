@@ -316,6 +316,7 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     }    
     weights <- matrix(w, nrow(mu_x), ncol(mu_x))
   }
+  browser()
   if(sum(weights<0)>1){
     stop("negative variance weights estimated")
   }
