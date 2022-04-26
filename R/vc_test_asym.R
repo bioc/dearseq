@@ -183,7 +183,6 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                                     lower.tail = FALSE,
                                     method = "saddlepoint")
         
-        #browser()
         ans <- list("set_score_obs" = score_list$score, 
                     "set_pval" = dv)
     }
