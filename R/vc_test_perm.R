@@ -99,7 +99,7 @@
 #'#run test
 #'permTestRes <- vc_test_perm(y, x, phi=t,
 #'                            w=matrix(1, ncol=ncol(y), nrow=nrow(y)),
-#'                            indiv=rep(1:4, each=3), n_perm=1, #1000,
+#'                            indiv=rep(1:4, each=3), n_perm=50, #1000,
 #'                            parallel_comp = FALSE)
 #'permTestRes$set_pval
 #'
