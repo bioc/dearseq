@@ -185,7 +185,7 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
             nperm_sup_obs_threshold <- rowSums(gene_scores_perm_threshold >= 
                                                  gene_scores_obs[ind_threshold])
             pvals_e_threshold <- permPvals(nPermSupObs = nperm_sup_obs_threshold, 
-                                           nPermEff = n_perm_threshold,
+                                           nPermEff = 2*n_perm_threshold,
                                            totalPossibleNPerm = N_possible_perms)
             
             pvals_e[ind_threshold] <- pvals_e_threshold
