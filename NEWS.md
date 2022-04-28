@@ -1,3 +1,8 @@
+CHANGES IN VERSION 1.8.1 (2022-04-28):
+--------------------------------------
+ + fixed a small bug in permutation p-values introduced with the 1.8.0 release
+
+
 CHANGES IN VERSION 1.7.2 (2022-04-13):
 --------------------------------------
  + reintroduced `CompQuadForm::davies()` as a longer alternative when the

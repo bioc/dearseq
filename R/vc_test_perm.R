@@ -179,18 +179,18 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                                             progressbar = progressbar,
                                             parallel_comp = parallel_comp,
                                             nb_cores = nb_cores)
+            n_perm_threshold <- n_perm_threshold*2 #update effective n_perm 
             
             gene_scores_perm_threshold <- cbind(gene_scores_perm_threshold[which(nperm_sup_obs_threshold<1), ], 
                                                 score_list_res$gene_scores_unscaled_perm)
             nperm_sup_obs_threshold <- rowSums(gene_scores_perm_threshold >= 
                                                  gene_scores_obs[ind_threshold])
             pvals_e_threshold <- permPvals(nPermSupObs = nperm_sup_obs_threshold, 
-                                           nPermEff = 2*n_perm_threshold,
+                                           nPermEff = n_perm_threshold,
                                            totalPossibleNPerm = N_possible_perms)
             
             pvals_e[ind_threshold] <- pvals_e_threshold
             ind_threshold <- ind_threshold[which(nperm_sup_obs_threshold<1)]
-            n_perm_threshold <- n_perm_threshold*2
             
         }
         names(pvals_e) <- names(gene_scores_obs)
