@@ -6,7 +6,7 @@
 \alias{dearseq-package}
 \title{dearseq: Differential Expression Analysis for RNA-seq data through a robust variance component test}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
 Differential Expression Analysis RNA-seq data with variance component score test accounting for data heteroscedasticity through precision weights. Perform both gene-wise and gene set analyses, and can deal with repeated or longitudinal data. Methods are detailed in: i) Agniel D & Hejblum BP (2017) Variance component score test for time-course gene set analysis of longitudinal RNA-seq data, Biostatistics, 18(4):589-604 ; and ii) Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020) dearseq: a variance component score test for RNA-Seq differential analysis that effectively controls the false discovery rate, NAR Genomics and Bioinformatics, 2(4):lqaa093.
 }
@@ -19,8 +19,8 @@ complex experimental designs such as longitudinal data.
 \tabular{ll}{
 Package: \tab dearseq\cr
 Type: \tab Package\cr
-Version: \tab 1.9.1\cr
-Date: \tab 2022-04-28\cr
+Version: \tab 1.9.2\cr
+Date: \tab 2022-07-12\cr
 License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 }
 The two main functions of the \code{dearseq} package are
