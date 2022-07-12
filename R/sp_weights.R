@@ -178,12 +178,19 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     if (N < 2) {
       stop("need at least 2 points to select a bandwidth automatically")
     }
+    
+    # remove NA to compute the bandwith
+    if(sum(is.na(mu_x))>0 & na.rm){
+      mu_x_nona <- na.omit(mu_x)
+    }else{
+      mu_x_nona <- mu_x
+    }
     bw <- switch(bw,
-                 nrd0 = stats::bw.nrd0(as.vector(mu_x)),
-                 nrd = stats::bw.nrd(as.vector(mu_x)),
-                 ucv = stats::bw.ucv(as.vector(mu_x)),
-                 bcv = stats::bw.bcv(as.vector(mu_x)),
-                 SJ = stats::bw.SJ(as.vector(mu_x), method = "ste"),
+                 nrd0 = stats::bw.nrd0(as.vector(mu_x_nona)),
+                 nrd = stats::bw.nrd(as.vector(mu_x_nona)),
+                 ucv = stats::bw.ucv(as.vector(mu_x_nona)),
+                 bcv = stats::bw.bcv(as.vector(mu_x_nona)),
+                 SJ = stats::bw.SJ(as.vector(mu_x_nona), method = "ste"),
                  stop("unknown bandwidth rule: 'bw' argument",
                       "must be among 'nrd0', 'nrd', 'ucv',",
                       "'bcv', 'SJ'")
@@ -300,8 +307,8 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     smth <- KernSmooth::locpoly(x = c(mu_x_fit), y = c(lse_fit), degree = 2,
                                 kernel = kernel, bandwidth = bw, gridsize = gridsize)
     w <- exp(-stats::approx(x = reverse_trans(smth$x), y = smth$y,
-                              xout = reverse_trans(mu_x),
-                              rule = 2)$y)
+                            xout = reverse_trans(mu_x),
+                            rule = 2)$y)
     cnt <- 0
     while((sum(is.na(w)) > 0 | sum(is.infinite(w)) > 0 ) & cnt < 5){
       cnt <- cnt + 1
@@ -317,11 +324,20 @@ sp_weights <- function(y, x, phi = NULL, use_phi = TRUE, preprocessed = FALSE,
     weights <- matrix(w, nrow(mu_x), ncol(mu_x))
   }
   if(sum(is.na(weights)) < 1){
-    if(sum(weights<0) > 0){
+    if(sum(weights < 0) > 0){
       stop("negative variance weights estimated")
     }
   }else{
-    stop("NA variance weights estimated")
+    if(na.rm){
+      if(all.equal(which(is.na(weights)), which(is.na(y_lcpm)))){
+        weights[is.na(weights)] <- 1
+      }else{
+        stop("NA variance weights estimated not matching NA in `y`")
+      }
+    }else{
+      stop("NA variance weights estimated while `na.rm`is FALSE")
+    }
+    
   }
   colnames(weights) <- colnames(y_lcpm)
   rownames(weights) <- rownames(y_lcpm)
