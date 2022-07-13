@@ -8,8 +8,8 @@
 #'\tabular{ll}{
 #'Package: \tab dearseq\cr
 #'Type: \tab Package\cr
-#'Version: \tab 1.9.2\cr
-#'Date: \tab 2022-07-12\cr
+#'Version: \tab 1.9.3\cr
+#'Date: \tab 2022-07-13\cr
 #'License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 #'}
 #'The two main functions of the \code{dearseq} package are
