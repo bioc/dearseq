@@ -83,7 +83,7 @@
 #'
 #'@import ggplot2
 #'@importFrom stats bw.bcv bw.nrd0 bw.nrd bw.SJ bw.ucv dnorm approx sd pnorm
-#'qnorm
+#'qnorm na.omit
 #'@importFrom KernSmooth locpoly
 #'@export
 
