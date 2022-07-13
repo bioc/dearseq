@@ -1,3 +1,8 @@
+CHANGES IN VERSION 1.8.3 (2022-07-13):
+--------------------------------------
+ + fixed a bug in NA handling with `which_weights` != "none"
+
+
 CHANGES IN VERSION 1.8.1 (2022-04-28):
 --------------------------------------
  + fixed a small bug in permutation p-values introduced with the 1.8.0 release
