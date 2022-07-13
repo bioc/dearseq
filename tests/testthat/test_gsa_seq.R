@@ -26,6 +26,41 @@ test_that("Gene sets with no genes measure trigger warnings", {
                           which_weights = "none", preprocessed = TRUE))
 })
 
+test_that("NA runs", {
+  rm(list = ls())
+  n <- 1000 #number of genes
+  nr=5 #number of measurements per subject (grouped data)
+  ni=50 #number of subjects
+  r <- nr*ni #number of measurements
+  t <- matrix(rep(1:nr), ni, ncol=1, nrow=r) # the variable to be tested
+  sigma <- 0.5
+  b0 <- 1
+  
+  #under the null:
+  b1 <- 0
+  
+  #create the matrix of gene expression
+  y.tilde <- b0 + b1*t + rnorm(r, sd = sigma)
+  y <- t(matrix(rnorm(n*r, sd = sqrt(sigma*abs(y.tilde))), ncol=n, nrow=r) +
+           matrix(rep(y.tilde, n), ncol=n, nrow=r))
+  
+  # add NA
+  y[10,8] = NA
+  
+  #no covariates
+  x <- matrix(1, ncol=1, nrow=r)
+  
+  #run test
+  #asymptotic test with preprocessed grouped data
+  
+  expect_warning(res <- dear_seq(exprmat=y, covariates=x, variables2test=t,
+                                 sample_group=rep(1:ni, each=nr),
+                                 which_test = "asymptotic",
+                                 na.rm_dearseq = TRUE,
+                                 which_weights='loclin', preprocessed=TRUE))
+  
+})
+
 test_that("Returned as many p-values as there are genesets", {
   rm(list = ls())
   n <- 200
