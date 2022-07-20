@@ -361,8 +361,8 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
     warning("'y' contains ", sum(is.na(y)), " `NA` values. ",
             "Currently they are ignored in the computations but ",
             "you should think carefully about where do those NA/NaN ",
-            "come from... If you don't want to ignore those NA/NaN ",
-            "values, set the `na.rm_gsaseq` argument to 'FALSE' ",
+            "come from... If you want to carry over those NA/NaN ",
+            "values in the results, set the `na.rm_gsaseq` argument to 'FALSE' ",
             "(this has not been fully tested ", 
             "and should be used with extreme care).")
   }
