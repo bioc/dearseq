@@ -1,3 +1,7 @@
+CHANGES IN VERSION 1.9.4 (2022-07-20):
+--------------------------------------
+ + use scattermore in `plot_weights()`
+
 CHANGES IN VERSION 1.8.3 (2022-07-13):
 --------------------------------------
  + fixed a bug in NA handling with `which_weights` != "none"
