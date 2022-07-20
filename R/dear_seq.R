@@ -130,7 +130,7 @@
 #'
 #'@param na.rm_dearseq logical: should missing values in \code{y} (including
 #'\code{NA} and \code{NaN}) be omitted from the calculations?
-#'Default is \code{FALSE}.
+#'Default is \code{TRUE}.
 #'
 #'
 #'@return A list with the following elements:\itemize{
