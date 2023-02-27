@@ -19,10 +19,10 @@ coverage](https://codecov.io/gh/borishejblum/dearseq/branch/master/graph/badge.s
 `dearseq` is a package for analyzing RNA-seq data. The 2 main functions
 of the package are `dear_seq()` and `dgsa_seq()`:
 
--   **Gene-wise Differential Analysis of RNA-seq data** can be performed
-    using the function `dear_seq()`.
--   **Gene Set Analysis of RNA-seq data** can be performed using the
-    function `dgsa_seq()`.
+- **Gene-wise Differential Analysis of RNA-seq data** can be performed
+  using the function `dear_seq()`.
+- **Gene Set Analysis of RNA-seq data** can be performed using the
+  function `dgsa_seq()`.
 
 The methods implemented in this package are detailed in the following
 articles:
@@ -33,6 +33,11 @@ articles:
 > Bioinformatics* **2**(*4*):lqaa093 [DOI:
 > 10.1093/nargab/lqaa093](https://doi.org/10.1101/10.1093/nargab/lqaa093)
 > [bioRxiv:635714](https://www.biorxiv.org/content/10.1101/635714v1)
+
+🌐 Reproducible code files for the results presented in Gauthier *et
+al.* (2020) can be dowloaded here:  
+[👉 *NAR G&B* reproducible code
+files](https://github.com/borishejblum/dearseq/releases/download/v1.7.2/NARGAB_ReproducibleCodeFiles.zip)
 
 > Agniel D & Hejblum BP (2017). Variance component score test for
 > time-course gene set analysis of longitudinal RNA-seq data,
