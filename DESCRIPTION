@@ -2,12 +2,13 @@ Package: dearseq
 Type: Package
 Title: Differential Expression Analysis for RNA-seq data through a robust 
        variance component test
-Version: 1.9.5
+Version: 1.11.1
 Date: 2023-03-16
 Authors@R: c(person("Denis", "Agniel", role = c("aut"),
                     email = "denis.agniel@gmail.com"),
 	           person("Boris P.", "Hejblum", role = c("aut", "cre"),
-	                  email = "boris.hejblum@u-bordeaux.fr"),
+	                  email = "boris.hejblum@u-bordeaux.fr",
+	                  comment = c(ORCID="0000-0003-0646-452X")),
 	           person("Marine", "Gauthier", role = c("aut"),
 	                  email = "marine.gauthier@u-bordeaux.fr"),
 	           person("Mélanie", "Huchon", role = c("ctb"),

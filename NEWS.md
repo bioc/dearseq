@@ -1,4 +1,4 @@
-CHANGES IN VERSION 1.9.5 (2023-03-16):
+CHANGES IN VERSION 1.11.1 (2023-03-16):
 --------------------------------------
  + add parallel support on Windows
 

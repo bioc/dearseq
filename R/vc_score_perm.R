@@ -80,7 +80,7 @@
 #'
 #'@importFrom stats model.matrix
 #'@importFrom pbapply pbsapply pboptions 
-#'@importFrom parallel makeCluster stopCluster
+#'@importFrom parallel makeCluster stopCluster detectCores
 #'
 #'@export
 vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
