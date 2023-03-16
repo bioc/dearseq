@@ -19,7 +19,7 @@ complex experimental designs such as longitudinal data.
 \tabular{ll}{
 Package: \tab dearseq\cr
 Type: \tab Package\cr
-Version: \tab 1.9.5\cr
+Version: \tab 1.11.1\cr
 Date: \tab 2023-03-16\cr
 License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 }
@@ -48,7 +48,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Boris P. Hejblum \email{boris.hejblum@u-bordeaux.fr}
+\strong{Maintainer}: Boris P. Hejblum \email{boris.hejblum@u-bordeaux.fr} (\href{https://orcid.org/0000-0003-0646-452X}{ORCID})
 
 Authors:
 \itemize{
