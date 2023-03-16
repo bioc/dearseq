@@ -1,3 +1,7 @@
+CHANGES IN VERSION 1.9.5 (2023-03-16):
+--------------------------------------
+ + add parallel support on Windows
+
 CHANGES IN VERSION 1.9.4 (2022-07-20):
 --------------------------------------
  + use scattermore in `plot_weights()`
