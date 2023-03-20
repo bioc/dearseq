@@ -53,7 +53,7 @@ jobs:
       matrix:
         config:
           - { os: ubuntu-latest, r: 'release', bioc: '3.16', cont: "bioconductor/bioconductor_docker:RELEASE_3_16", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
-          - { os: ubuntu-devel, r: 'devel', bioc: '3.17', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+          - { os: ubuntu-devel, r: 'devel', bioc: '3.17', http-user-agent: 'release', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
           - { os: macOS-latest, r: 'release', bioc: '3.16'}
           - { os: windows-latest, r: 'release', bioc: '3.16', rtools-version: '42'}
     env:
