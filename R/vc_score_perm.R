@@ -235,7 +235,7 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
                                 cl = par_clust)
     
     if(parallel_comp && .Platform$OS.type != "unix"){
-        parallel::stopCluster(sock_clust)
+        parallel::stopCluster(par_clust)
     }
         
     if(!progressbar){
