@@ -2,9 +2,11 @@ CHANGES IN VERSION 1.11.1 (2023-03-16):
 --------------------------------------
  + add parallel support on Windows
 
+
 CHANGES IN VERSION 1.9.4 (2022-07-20):
 --------------------------------------
- + use scattermore in `plot_weights()`
+ + use `scattermore::` in `plot_weights()`
+
 
 CHANGES IN VERSION 1.8.3 (2022-07-13):
 --------------------------------------
@@ -30,21 +32,21 @@ CHANGES IN VERSION 1.7.1 (2022-02-07):
 
 CHANGES IN VERSION 1.5.1 (2021-09-01):
 --------------------------------------
-+ switching from `CompQuadForm::davies()` to the `"saddlepoint"` method from 
+ + switching from `CompQuadForm::davies()` to the `"saddlepoint"` method from 
  `survey::pchisqsum()` for computing quadratic form asymptotic p-values
 
 
 CHANGES IN VERSION 1.3.0 (2021-03-09):
 --------------------------------------
-+ adding plotting capabilities
+ + adding plotting capabilities
 
 
 CHANGES IN VERSION 1.2.0 (2020-05-20):
 --------------------------------------
-+ adding adaptive permutations
+ + adding adaptive permutations
 
 
 INITIAL RELEASE - VERSION 1.0.0 (2019-11-26):
 ---------------------------------------------
-+ this is a reboot of the `tcgsaseq` package
+ + this is a reboot of the `tcgsaseq` package
 
