@@ -36,7 +36,6 @@
 #'
 #'@param nb_cores an integer indicating the number of cores to be used when
 #'\code{parallel_comp} is \code{TRUE}.
-#'Only Linux and MacOS are supported, this is ignored on Windows.
 #'Default is \code{parallel::detectCores() - 1}.
 #'
 #'@param genewise_pvals a logical flag indicating whether gene-wise p-values
