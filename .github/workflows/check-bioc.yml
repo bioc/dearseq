@@ -52,10 +52,10 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest, r: 'release', bioc: '3.16', cont: "bioconductor/bioconductor_docker:RELEASE_3_16", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
-          - { os: ubuntu-latest, r: 'devel', bioc: '3.17', http-user-agent: 'release', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
-          - { os: macOS-latest, r: 'release', bioc: '3.16'}
-          - { os: windows-latest, r: 'release', bioc: '3.16', rtools-version: '42'}
+          - { os: ubuntu-latest, r: 'release', bioc: '3.17', cont: "bioconductor/bioconductor_docker:RELEASE_3_16", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+          - { os: ubuntu-latest, r: 'devel', bioc: '3.18', http-user-agent: 'release', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+          - { os: macOS-latest, r: 'release', bioc: '3.17'}
+          - { os: windows-latest, r: 'release', bioc: '3.17', rtools-version: '43'}
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
@@ -295,7 +295,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@master
         with:
-          name: ${{ runner.os }}-biocversion-RELEASE_3_16-r-4.2-results
+          name: ${{ runner.os }}-biocversion-RELEASE_3_17-r-4.3-results
           path: check
 
         ## Note that DOCKER_PASSWORD is really a token for your dockerhub
