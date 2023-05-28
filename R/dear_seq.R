@@ -39,9 +39,11 @@
 #'@param weights_var2test_condi  a logical flag indicating whether
 #'heteroscedasticity weights computation should be conditional on both the
 #'variables to be tested \code{variables2test} and on the \code{covariates},
-#'or on \code{covariates} alone. Default is \code{TRUE} in which case
-#'conditional means are estimated conditionally on both \code{variables2test}
-#'and \code{covariates}.
+#'or on \code{covariates} alone. Default is \code{TRUE} for the asymptotic test 
+#'(in which case conditional means are estimated conditionally on both 
+#'\code{variables2test} and \code{covariates}), and \code{FALSE} for the
+#'permutation test (in which case conditional means are estimated 
+#'conditionally on only the  \code{covariates}).
 #'
 #'@param sample_group a vector of length \code{n} indicating whether the samples
 #'should be grouped (e.g. paired samples or longitudinal data). Coerced
@@ -238,7 +240,7 @@ dear_seq <- function(exprmat = NULL, object = NULL,
                      covariates =NULL,
                      variables2test,
                      sample_group = NULL,
-                     weights_var2test_condi = TRUE,
+                     weights_var2test_condi = (which_test != "permutation"),
                      cov_variables2test_eff = NULL,
                      which_test = c("permutation", "asymptotic"),
                      which_weights = c("loclin", "voom", "none"),

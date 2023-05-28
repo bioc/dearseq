@@ -39,8 +39,11 @@
 #'@param weights_var2test_condi a logical flag indicating whether
 #'heteroscedasticity weights computation should be conditional on both the
 #'variable(s) to be tested \code{phi} and on covariate(s) \code{x}, or on
-#'\code{x} alone. Default is \code{TRUE} in which case conditional means are
-#'estimated conditionally on both \code{x} and \code{phi}.
+#'\code{x} alone.  Default is \code{TRUE} for the asymptotic test 
+#'(in which case conditional means are estimated conditionally on both 
+#'\code{variables2test} and \code{covariates}), and \code{FALSE} for the
+#'permutation test (in which case conditional means are estimated 
+#'conditionally on only the  \code{covariates}).
 #'
 #'@param genesets Can be either:\itemize{
 #'\item a \code{vector}
@@ -249,7 +252,7 @@
 dgsa_seq <- function(exprmat = NULL, object = NULL,
                      covariates = NULL,
                      variables2test,
-                     weights_var2test_condi = TRUE,
+                     weights_var2test_condi = (which_test != "permutation"),
                      genesets,
                      sample_group = NULL,
                      cov_variables2test_eff = NULL,
@@ -273,6 +276,14 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
                      na.rm_gsaseq = TRUE,
                      verbose = TRUE) {
   
+  if(weights_var2test_condi & which_test == "permutation"){
+      warning("`weights_var2test_condi` must be FALSE for the ",
+              "permutation test, as `phi` gets permuted.")
+      weights_var2test_condi <- FALSE
+      message("Setting `weights_var2test_condi` to FALSE ",
+              "with the permutation test.")
+  }
+    
   if(!is.null(object) & !is.null(exprmat)){
     stop("only one of 'object' or 'exprmat' should be specified")
   }

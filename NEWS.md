@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.12.1 (2023-05-28):
+--------------------------------------
+ + `weights_var2test_condi` is enforced to `FALSE` 
+ for the permutation test
+ 
+
 CHANGES IN VERSION 1.11.1 (2023-03-16):
 --------------------------------------
  + add parallel support on Windows
