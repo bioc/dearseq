@@ -1,4 +1,4 @@
-CHANGES IN VERSION 1.13.1 (2023-05-28):
+CHANGES IN VERSION 1.12.1 (2023-05-28):
 --------------------------------------
  + `weights_var2test_condi` is enforced to `FALSE` 
  for the permutation test
