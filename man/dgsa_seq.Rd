@@ -9,7 +9,7 @@ dgsa_seq(
   object = NULL,
   covariates = NULL,
   variables2test,
-  weights_var2test_condi = TRUE,
+  weights_var2test_condi = (which_test != "permutation"),
   genesets,
   sample_group = NULL,
   cov_variables2test_eff = NULL,
@@ -72,8 +72,11 @@ design matrix given in \code{object}.
 \item{weights_var2test_condi}{a logical flag indicating whether
 heteroscedasticity weights computation should be conditional on both the
 variable(s) to be tested \code{phi} and on covariate(s) \code{x}, or on
-\code{x} alone. Default is \code{TRUE} in which case conditional means are
-estimated conditionally on both \code{x} and \code{phi}.}
+\code{x} alone.  Default is \code{TRUE} for the asymptotic test 
+(in which case conditional means are estimated conditionally on both 
+\code{variables2test} and \code{covariates}), and \code{FALSE} for the
+permutation test (in which case conditional means are estimated 
+conditionally on only the  \code{covariates}).}
 
 \item{genesets}{Can be either:\itemize{
 \item a \code{vector}
