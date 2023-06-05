@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.13.2 (2023-06-05):
+--------------------------------------
+ + bug fix on Linux: default number of cores for parallel computations 
+ is now `ceiling(detect_cores()/2 - 1)` 
+ 
+
 CHANGES IN VERSION 1.12.1 (2023-05-28):
 --------------------------------------
  + `weights_var2test_condi` is enforced to `FALSE` 

@@ -42,7 +42,7 @@
 #'
 #'@param nb_cores an integer indicating the number of cores to be used when
 #'\code{parallel_comp} is \code{TRUE}.
-#'Default is \code{parallel::detectCores() - 1}.
+#'Default is \code{ceiling(parallel::detectCores()/2 - 1)}.
 #'
 #'@return A list with the following elements:
 #'\itemize{
@@ -123,7 +123,7 @@ vc_score_h_perm <- function(y, x, indiv, phi, w,
                             n_perm = 1000,
                             progressbar = TRUE,
                             parallel_comp = TRUE,
-                            nb_cores = parallel::detectCores() - 1) {
+                            nb_cores = ceiling(parallel::detectCores()/2 - 1)) {
 
     ## validity checks
     if (sum(!is.finite(w)) > 0) {

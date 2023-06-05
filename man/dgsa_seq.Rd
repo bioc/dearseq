@@ -18,7 +18,7 @@ dgsa_seq(
   n_perm = 1000,
   progressbar = TRUE,
   parallel_comp = TRUE,
-  nb_cores = parallel::detectCores() - 1,
+  nb_cores = ceiling(parallel::detectCores()/2 - 1),
   preprocessed = FALSE,
   gene_based_weights = TRUE,
   bw = "nrd",
@@ -126,7 +126,7 @@ Windows. Default is \code{TRUE}.}
 
 \item{nb_cores}{an integer indicating the number of cores to be used when
 \code{parallel_comp} is \code{TRUE}.
-Default is \code{parallel::detectCores() - 1}.}
+Default is \code{ceiling(parallel::detectCores()/2 - 1)}.}
 
 \item{preprocessed}{a logical flag indicating whether the expression data have
 already been preprocessed (e.g. log2 transformed). Default is \code{FALSE}, in

@@ -15,7 +15,7 @@ vc_score_perm(
   n_perm = 1000,
   progressbar = TRUE,
   parallel_comp = TRUE,
-  nb_cores = parallel::detectCores() - 1
+  nb_cores = ceiling(parallel::detectCores()/2 - 1)
 )
 }
 \arguments{
@@ -52,7 +52,7 @@ Windows. Default is \code{TRUE}.}
 
 \item{nb_cores}{an integer indicating the number of cores to be used when
 \code{parallel_comp} is \code{TRUE}.
-Default is \code{parallel::detectCores() - 1}.}
+Default is \code{ceiling(parallel::detectCores()/2 - 1)}.}
 }
 \value{
 A list with the following elements:\itemize{

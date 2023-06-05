@@ -36,7 +36,7 @@
 #'
 #'@param nb_cores an integer indicating the number of cores to be used when
 #'\code{parallel_comp} is \code{TRUE}.
-#'Default is \code{parallel::detectCores() - 1}.
+#'Default is \code{ceiling(parallel::detectCores()/2 - 1)}.
 #'
 #'@param genewise_pvals a logical flag indicating whether gene-wise p-values
 #'should be returned. Default is \code{FALSE} in which case gene-set p-value is
@@ -107,7 +107,7 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                          Sigma_xi = diag(ncol(phi)),
                          n_perm = 1000, progressbar = TRUE,
                          parallel_comp = TRUE,
-                         nb_cores = parallel::detectCores() - 1,
+                         nb_cores = ceiling(parallel::detectCores()/2 - 1),
                          genewise_pvals = FALSE, 
                          adaptive = TRUE, max_adaptive = 64000,
                          homogen_traj = FALSE, na.rm = FALSE) {
@@ -154,10 +154,10 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
         #pvals_u <- (nperm_sup_obs + 1)/(n_perm +1)
         pvals_e <- permPvals(nPermSupObs = nperm_sup_obs, nPermEff = n_perm,
                              totalPossibleNPerm = N_possible_perms)
-        ind_threshold <- which(nperm_sup_obs < 1)
+        ind_threshold <- which(nperm_sup_obs < 5)
         #ind_threshold <- as.numeric(which(pvals_e<=2/(n_perm/10)))
         n_perm_threshold <- n_perm
-        gene_scores_perm_threshold <- gene_scores_perm
+        gene_scores_perm_threshold <- gene_scores_perm[ind_threshold, ]
         nperm_sup_obs_threshold <- nperm_sup_obs
         
         if(adaptive && (min(pvals_e)!=(0.05/length(pvals_e))) && 
@@ -166,7 +166,7 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
         }
         
         while(adaptive && (min(pvals_e)!=(0.05/length(pvals_e))) && 
-              (length(ind_threshold)>1) && (n_perm_threshold <= max_adaptive)){
+              (length(ind_threshold)>0) && (n_perm_threshold <= max_adaptive)){
             message("  performing ", n_perm_threshold, 
                     " additional permutations for ", length(ind_threshold),  
                     " genes")
@@ -178,19 +178,28 @@ vc_test_perm <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                                             progressbar = progressbar,
                                             parallel_comp = parallel_comp,
                                             nb_cores = nb_cores)
-            n_perm_threshold <- n_perm_threshold*2
             
-            gene_scores_perm_threshold <- cbind(gene_scores_perm_threshold[which(nperm_sup_obs_threshold<1), ], 
+            gene_scores_perm_threshold <- cbind(gene_scores_perm_threshold, 
                                                 score_list_res$gene_scores_unscaled_perm)
+            n_perm_ad <- ncol(gene_scores_perm_threshold)
             nperm_sup_obs_threshold <- rowSums(gene_scores_perm_threshold >= 
                                                  gene_scores_obs[ind_threshold])
             pvals_e_threshold <- permPvals(nPermSupObs = nperm_sup_obs_threshold, 
-                                           nPermEff = n_perm_threshold,
+                                           nPermEff = n_perm_ad,
                                            totalPossibleNPerm = N_possible_perms)
             
             pvals_e[ind_threshold] <- pvals_e_threshold
-            ind_threshold <- ind_threshold[which(nperm_sup_obs_threshold<1)]
-            n_perm_threshold <- n_perm_threshold*2
+            
+            
+            still_needed <- which(nperm_sup_obs_threshold<5)
+            if(length(still_needed)>1){
+                ind_threshold <- ind_threshold[still_needed]
+                gene_scores_perm_threshold <- gene_scores_perm_threshold[still_needed, ]
+                n_perm_threshold <- n_perm_threshold*4
+            }else{
+                ind_threshold <- NULL
+                n_perm_threshold <- max_adaptive + 1
+            }
             
         }
         names(pvals_e) <- names(gene_scores_obs)

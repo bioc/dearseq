@@ -39,7 +39,7 @@
 #'
 #'@param nb_cores an integer indicating the number of cores to be used when
 #'\code{parallel_comp} is \code{TRUE}.
-#'Default is \code{parallel::detectCores() - 1}.
+#'Default is \code{ceiling(parallel::detectCores()/2 - 1)}.
 #'
 #'@return A list with the following elements:\itemize{
 #'   \item \code{score}: an approximation of the observed set score
@@ -86,7 +86,7 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
                           na_rm = FALSE,
                           n_perm = 1000, progressbar = TRUE,
                           parallel_comp = TRUE,
-                          nb_cores = parallel::detectCores() - 1) {
+                          nb_cores = ceiling(parallel::detectCores()/2 - 1)) {
     ## validity checks
     if (sum(!is.finite(w)) > 0) {
         stop("At least 1 non-finite weight in 'w'")
@@ -142,7 +142,8 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
     ##     Phi_list[[i]] <- kronecker(diag(g), phi_i)
     ##     x_tilde_list[[i]] <- kronecker(diag(g), x_i)
     ##     y_tilde_list[[i]] <- matrix(t(y_i), ncol=1)
-    ## } x_tilde <- do.call(rbind, x_tilde_list)
+    ## } 
+    ## x_tilde <- do.call(rbind, x_tilde_list)
     ## y_tilde <- do.call(rbind, y_tilde_list)
     ## Phi <- do.call(rbind, Phi_list)
     ## alpha <- solve(t(x_tilde)%*%x_tilde)%*%t(x_tilde)%*%y_tilde
@@ -186,7 +187,7 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
     compute_genewise_scores <- function(v, indiv_mat, avg_xtx_inv_tx) {
         phi_perm <- phi[v, , drop = FALSE]
         phi_sig_xi_sqrt <- phi_perm %*% sig_xi_sqrt
-        T_fast <- do.call(cbind, replicate(K, sig_eps_inv_T,
+        T_fast <- do.call(cbind, replicate(K, sig_eps_inv_T,#[v, , drop = FALSE],
                                            simplify = FALSE)) *
             matrix(apply(phi_sig_xi_sqrt, 2, rep, g), ncol = g * K)
         q_fast <- matrix(yt_mu, ncol = g * n_t, nrow = n) * T_fast
