@@ -1,5 +1,5 @@
 #'
-#'@details 
+#'@details
 #'Analysis of RNA-seq data with variance component score
 #'test accounting for data heteroscedasticity through precision weights.
 #'Performs gene-wise analysis as well as gene set analysis, including for
@@ -8,8 +8,8 @@
 #'\tabular{ll}{
 #'Package: \tab dearseq\cr
 #'Type: \tab Package\cr
-#'Version: \tab 1.13.2\cr
-#'Date: \tab 2023-06-05\cr
+#'Version: \tab 1.13.3\cr
+#'Date: \tab 2023-06-16\cr
 #'License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 #'}
 #'The two main functions of the \code{dearseq} package are
@@ -24,7 +24,7 @@
 #'
 #'Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). dearseq: a variance
 #'component score test for RNA-Seq differential analysis that effectively
-#'controls the false discovery rate, \emph{NAR Genomics and Bioinformatics}, 
+#'controls the false discovery rate, \emph{NAR Genomics and Bioinformatics},
 #'2(4):lqaa093.
 #'\href{https://doi.org/10.1093/nargab/lqaa093}{DOI: 10.1093/nargab/lqaa093}.
 #'\href{https://www.biorxiv.org/content/10.1101/635714}{DOI: 10.1101/635714}

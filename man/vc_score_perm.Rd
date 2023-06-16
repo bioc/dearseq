@@ -15,7 +15,7 @@ vc_score_perm(
   n_perm = 1000,
   progressbar = TRUE,
   parallel_comp = TRUE,
-  nb_cores = ceiling(parallel::detectCores()/2 - 1)
+  nb_cores = parallel::detectCores(logical = FALSE) - 1
 )
 }
 \arguments{
@@ -52,7 +52,7 @@ Windows. Default is \code{TRUE}.}
 
 \item{nb_cores}{an integer indicating the number of cores to be used when
 \code{parallel_comp} is \code{TRUE}.
-Default is \code{ceiling(parallel::detectCores()/2 - 1)}.}
+Default is \code{parallel::detectCores(logical=FALSE) - 1}.}
 }
 \value{
 A list with the following elements:\itemize{
@@ -65,8 +65,8 @@ A list with the following elements:\itemize{
 }
 }
 \description{
-This function computes the variance component score test statistics along 
-with its permuted values for estimating its distribution under the null 
+This function computes the variance component score test statistics along
+with its permuted values for estimating its distribution under the null
 hypothesis.
 }
 \examples{

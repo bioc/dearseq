@@ -1,7 +1,7 @@
 #'Computes variance component score test statistics and its permuted distribution
 #'
-#'This function computes the variance component score test statistics along 
-#'with its permuted values for estimating its distribution under the null 
+#'This function computes the variance component score test statistics along
+#'with its permuted values for estimating its distribution under the null
 #'hypothesis.
 #'
 #'@keywords internal
@@ -39,7 +39,7 @@
 #'
 #'@param nb_cores an integer indicating the number of cores to be used when
 #'\code{parallel_comp} is \code{TRUE}.
-#'Default is \code{ceiling(parallel::detectCores()/2 - 1)}.
+#'Default is \code{parallel::detectCores(logical=FALSE) - 1}.
 #'
 #'@return A list with the following elements:\itemize{
 #'   \item \code{score}: an approximation of the observed set score
@@ -78,7 +78,7 @@
 #'scoreTest$score
 #'
 #'@importFrom stats model.matrix
-#'@importFrom pbapply pbsapply pboptions 
+#'@importFrom pbapply pbsapply pboptions
 #'@importFrom parallel makeCluster stopCluster detectCores
 #'
 #'@export
@@ -86,17 +86,17 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
                           na_rm = FALSE,
                           n_perm = 1000, progressbar = TRUE,
                           parallel_comp = TRUE,
-                          nb_cores = ceiling(parallel::detectCores()/2 - 1)) {
+                          nb_cores = parallel::detectCores(logical=FALSE) - 1) {
     ## validity checks
     if (sum(!is.finite(w)) > 0) {
         stop("At least 1 non-finite weight in 'w'")
     }
-    
+
     ## dimensions check------
     stopifnot(is.matrix(y))
     stopifnot(is.matrix(x))
     stopifnot(is.matrix(phi))
-    
+
     g <- nrow(y)  # the number of genes measured
     n <- ncol(y)  # the number of samples measured
     p <- ncol(x)  # the number of covariates
@@ -106,8 +106,8 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
     stopifnot(ncol(w) == n)
     stopifnot(nrow(phi) == n)
     stopifnot(length(indiv) == n)
-    
-    
+
+
     # the number of random effects
     if (length(Sigma_xi) == 1) {
         K <- 1
@@ -117,12 +117,12 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
         stopifnot(ncol(Sigma_xi) == K)
     }
     stopifnot(n_t == K)
-    
-    
+
+
     ## data formating ------
     indiv <- as.factor(indiv)
     nb_indiv <- length(levels(indiv))
-    
+
     ## OLS for conditional mean -----
     y_T <- t(y)
     if (na_rm & sum(is.na(y_T)) > 0) {
@@ -142,15 +142,15 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
     ##     Phi_list[[i]] <- kronecker(diag(g), phi_i)
     ##     x_tilde_list[[i]] <- kronecker(diag(g), x_i)
     ##     y_tilde_list[[i]] <- matrix(t(y_i), ncol=1)
-    ## } 
+    ## }
     ## x_tilde <- do.call(rbind, x_tilde_list)
     ## y_tilde <- do.call(rbind, y_tilde_list)
     ## Phi <- do.call(rbind, Phi_list)
     ## alpha <- solve(t(x_tilde)%*%x_tilde)%*%t(x_tilde)%*%y_tilde
     ## mu_new <- x_tilde %*% alpha
     ## y_mu <- y_tilde - mu_new
-    
-    
+
+
     ## test statistic computation ------
     ## q <- matrix(NA, nrow=nb_indiv, ncol=g*K)
     ## XT_i <- array(NA, c(nb_indiv, g*p, g*K))
@@ -171,19 +171,19 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
     ##     U[i,] <- xtx_inv %*% t(x_tilde_i) %*% y_mu_i
     ## }
     ## XT <- colMeans(XT_i) q_ext <- q - U %*% XT
-    
+
     # sig_eps_inv <- w/sigma #no need as this just scales the test statistics
-    
+
     sig_xi_sqrt <- (Sigma_xi * diag(K)) %^% (-0.5)
     sig_eps_inv_T <- t(w)
-    
+
     if (length(levels(indiv)) > 1) {
         indiv_mat <- stats::model.matrix(~0 + factor(indiv))
     } else {
         indiv_mat <- matrix(as.numeric(indiv), ncol = 1)
     }
     avg_xtx_inv_tx <- nb_indiv * tcrossprod(solve(crossprod(x, x)), x)
-    
+
     compute_genewise_scores <- function(v, indiv_mat, avg_xtx_inv_tx) {
         phi_perm <- phi[v, , drop = FALSE]
         phi_sig_xi_sqrt <- phi_perm %*% sig_xi_sqrt
@@ -206,19 +206,19 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
         qq <- colSums(q, na.rm = na_rm)^2/nb_indiv
         return(rowSums(matrix(qq, ncol = K)))  # genewise scores
     }
-    
+
     o <- order(as.numeric(unlist(split(x = as.character(seq_len(n)),
                                        f = indiv))))
     perm_list <- c(list(seq_len(n)), lapply(seq_len(n_perm), function(x){
         as.numeric(unlist(lapply(split(x = as.character(seq_len(n)), f = indiv),
                                  FUN=sample)))[o]}))
-    
-    
+
+
     if(!progressbar){
         opb <- getOption("pboptions")
         pbapply::pboptions(type="none")
     }
-    
+
     if(!parallel_comp){
         par_clust <- 1L
     }else{
@@ -228,25 +228,25 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
             par_clust <- parallel::makeCluster(nb_cores)
         }
     }
-    
+
     gene_Q <- pbapply::pbsapply(perm_list, compute_genewise_scores,
                                 indiv_mat = indiv_mat,
                                 avg_xtx_inv_tx = avg_xtx_inv_tx,
                                 cl = par_clust)
-    
+
     if(parallel_comp && .Platform$OS.type != "unix"){
         parallel::stopCluster(par_clust)
     }
-        
+
     if(!progressbar){
         pboptions(opb)
     }
-    
-    
+
+
     rownames(gene_Q) <- colnames(yt_mu)
     QQ <- colSums(gene_Q)
-    
-    
+
+
     return(list(score = QQ[1], scores_perm = QQ[-1],
                 gene_scores_unscaled = gene_Q[, 1],
                 gene_scores_unscaled_perm = gene_Q[, -1]))

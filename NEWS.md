@@ -1,7 +1,7 @@
-CHANGES IN VERSION 1.13.2 (2023-06-05):
+CHANGES IN VERSION 1.13.3 (2023-06-16):
 --------------------------------------
  + bug fix on Linux: default number of cores for parallel computations 
- is now `ceiling(detect_cores()/2 - 1)` 
+ is now `detect_cores(logical=FALSE) - 1` 
  
 
 CHANGES IN VERSION 1.12.1 (2023-05-28):

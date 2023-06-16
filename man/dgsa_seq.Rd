@@ -18,7 +18,7 @@ dgsa_seq(
   n_perm = 1000,
   progressbar = TRUE,
   parallel_comp = TRUE,
-  nb_cores = ceiling(parallel::detectCores()/2 - 1),
+  nb_cores = parallel::detectCores(logical = FALSE) - 1,
   preprocessed = FALSE,
   gene_based_weights = TRUE,
   bw = "nrd",
@@ -57,7 +57,7 @@ Usually, its first column is the intercept (full of \code{1}s).
 \item If \code{object} is specified: then \code{covariates} must be a
 character vector of length \code{p} containing the colnames of the
 design matrix given in \code{object}.
-} If \code{covariates} is \code{NULL} (the default), then it is just the 
+} If \code{covariates} is \code{NULL} (the default), then it is just the
 intercept.}
 
 \item{variables2test}{\itemize{
@@ -72,10 +72,10 @@ design matrix given in \code{object}.
 \item{weights_var2test_condi}{a logical flag indicating whether
 heteroscedasticity weights computation should be conditional on both the
 variable(s) to be tested \code{phi} and on covariate(s) \code{x}, or on
-\code{x} alone.  Default is \code{TRUE} for the asymptotic test 
-(in which case conditional means are estimated conditionally on both 
+\code{x} alone.  Default is \code{TRUE} for the asymptotic test
+(in which case conditional means are estimated conditionally on both
 \code{variables2test} and \code{covariates}), and \code{FALSE} for the
-permutation test (in which case conditional means are estimated 
+permutation test (in which case conditional means are estimated
 conditionally on only the  \code{covariates}).}
 
 \item{genesets}{Can be either:\itemize{
@@ -89,7 +89,7 @@ set is being tested).
 
 Can also be a \code{list} of index (or \code{rownames} of \code{y}) when
 several gene sets are tested at once, such as the first element of a
-\code{\link[GSA:GSA.read.gmt]{gmt}} object. 
+\code{\link[GSA:GSA.read.gmt]{gmt}} object.
 
 Finally, can also be a \code{\link[BiocSet:BiocSet-class]{BiocSet}} object
 
@@ -126,7 +126,7 @@ Windows. Default is \code{TRUE}.}
 
 \item{nb_cores}{an integer indicating the number of cores to be used when
 \code{parallel_comp} is \code{TRUE}.
-Default is \code{ceiling(parallel::detectCores()/2 - 1)}.}
+Default is \code{parallel::detectCores(logical=FALSE) - 1}.}
 
 \item{preprocessed}{a logical flag indicating whether the expression data have
 already been preprocessed (e.g. log2 transformed). Default is \code{FALSE}, in
@@ -169,7 +169,7 @@ each value. Larger values give more smoothness. Only used if
 \item{R}{library size (optional, important to provide if
 \code{preprocessed = TRUE}). Default is \code{NULL}}
 
-\item{adaptive}{a logical flag indicating whether adaptive permutation should 
+\item{adaptive}{a logical flag indicating whether adaptive permutation should
 be performed. Default is \code{TRUE}}
 
 \item{max_adaptive}{The maximum number of permutations considered.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/vc_score_h_perm.R
 \name{vc_score_h_perm}
 \alias{vc_score_h_perm}
-\title{Computes variance component score test statistics for homogeneous trajectory 
+\title{Computes variance component score test statistics for homogeneous trajectory
 and its permuted distribution}
 \usage{
 vc_score_h_perm(
@@ -16,7 +16,7 @@ vc_score_h_perm(
   n_perm = 1000,
   progressbar = TRUE,
   parallel_comp = TRUE,
-  nb_cores = ceiling(parallel::detectCores()/2 - 1)
+  nb_cores = parallel::detectCores(logical = FALSE) - 1
 )
 }
 \arguments{
@@ -55,7 +55,7 @@ Windows. Default is \code{TRUE}.}
 
 \item{nb_cores}{an integer indicating the number of cores to be used when
 \code{parallel_comp} is \code{TRUE}.
-Default is \code{ceiling(parallel::detectCores()/2 - 1)}.}
+Default is \code{parallel::detectCores(logical=FALSE) - 1}.}
 }
 \value{
 A list with the following elements:
@@ -69,8 +69,8 @@ A list with the following elements:
 }
 }
 \description{
-This function computes the variance component score test statistics 
-for homogeneous trajectories along with its permuted values for estimating 
+This function computes the variance component score test statistics
+for homogeneous trajectories along with its permuted values for estimating
 its distribution under the null hypothesis.
 }
 \examples{

@@ -1,8 +1,8 @@
-#'Computes variance component score test statistics for homogeneous trajectory 
+#'Computes variance component score test statistics for homogeneous trajectory
 #'and its permuted distribution
 #'
-#'This function computes the variance component score test statistics 
-#'for homogeneous trajectories along with its permuted values for estimating 
+#'This function computes the variance component score test statistics
+#'for homogeneous trajectories along with its permuted values for estimating
 #'its distribution under the null hypothesis.
 #'
 #'@keywords internal
@@ -42,7 +42,7 @@
 #'
 #'@param nb_cores an integer indicating the number of cores to be used when
 #'\code{parallel_comp} is \code{TRUE}.
-#'Default is \code{ceiling(parallel::detectCores()/2 - 1)}.
+#'Default is \code{parallel::detectCores(logical=FALSE) - 1}.
 #'
 #'@return A list with the following elements:
 #'\itemize{
@@ -123,7 +123,7 @@ vc_score_h_perm <- function(y, x, indiv, phi, w,
                             n_perm = 1000,
                             progressbar = TRUE,
                             parallel_comp = TRUE,
-                            nb_cores = ceiling(parallel::detectCores()/2 - 1)) {
+                            nb_cores = parallel::detectCores(logical=FALSE) - 1) {
 
     ## validity checks
     if (sum(!is.finite(w)) > 0) {

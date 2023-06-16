@@ -24,7 +24,7 @@
 #'\item If \code{object} is specified: then \code{covariates} must be a
 #'character vector of length \code{p} containing the colnames of the
 #'design matrix given in \code{object}.
-#'} If \code{covariates} is \code{NULL} (the default), then it is just the 
+#'} If \code{covariates} is \code{NULL} (the default), then it is just the
 #'intercept.
 #'
 #'@param variables2test \itemize{
@@ -39,10 +39,10 @@
 #'@param weights_var2test_condi  a logical flag indicating whether
 #'heteroscedasticity weights computation should be conditional on both the
 #'variables to be tested \code{variables2test} and on the \code{covariates},
-#'or on \code{covariates} alone. Default is \code{TRUE} for the asymptotic test 
-#'(in which case conditional means are estimated conditionally on both 
+#'or on \code{covariates} alone. Default is \code{TRUE} for the asymptotic test
+#'(in which case conditional means are estimated conditionally on both
 #'\code{variables2test} and \code{covariates}), and \code{FALSE} for the
-#'permutation test (in which case conditional means are estimated 
+#'permutation test (in which case conditional means are estimated
 #'conditionally on only the  \code{covariates}).
 #'
 #'@param sample_group a vector of length \code{n} indicating whether the samples
@@ -76,7 +76,7 @@
 #'
 #'@param nb_cores an integer indicating the number of cores to be used when
 #'\code{parallel_comp} is \code{TRUE}.
-#'Default is \code{ceiling(parallel::detectCores()/2 - 1)}.
+#'Default is \code{parallel::detectCores(logical=FALSE) - 1}.
 #'
 #'@param preprocessed a logical flag indicating whether the expression data have
 #'already been preprocessed (e.g. log2 transformed). Default is \code{FALSE}, in
@@ -119,7 +119,7 @@
 #'@param R library.size (optional, important to provide if
 #'\code{preprocessed = TRUE}). Default is \code{NULL}
 #'
-#'@param adaptive a logical flag indicating whether adaptive permutation should 
+#'@param adaptive a logical flag indicating whether adaptive permutation should
 #'be performed. Default is \code{TRUE}
 #'
 #'@param max_adaptive The maximum number of permutations considered.
@@ -159,20 +159,20 @@
 #'@seealso \code{\link{sp_weights}} \code{\link{vc_test_perm}}
 #'\code{\link{vc_test_asym}} \code{\link{p.adjust}}
 #'
-#'@references Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). dearseq: 
-#'a variance component score test for RNA-Seq differential analysis that 
-#'effectivelycontrols the false discovery rate, 
+#'@references Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). dearseq:
+#'a variance component score test for RNA-Seq differential analysis that
+#'effectivelycontrols the false discovery rate,
 #'\emph{NAR Genomics and Bioinformatics}, 2(4):lqaa093.
 #'\href{https://doi.org/10.1093/nargab/lqaa093}{DOI: 10.1093/nargab/lqaa093}.
 #'\href{https://www.biorxiv.org/content/10.1101/635714}{DOI: 10.1101/635714}
 #'
 #'@examples
 #'
-#'#Monte-Carlo estimation of the proportion of DE genes over `nsims` 
+#'#Monte-Carlo estimation of the proportion of DE genes over `nsims`
 #'#simulations under the null
 #'
 #'#number of runs
-#'nsims <- 2 #100 
+#'nsims <- 2 #100
 #'res <- numeric(nsims)
 
 #'for(i in 1:nsims){
@@ -180,34 +180,34 @@
 #'  nr=5 #number of measurements per subject (grouped data)
 #'  ni=50 #number of subjects
 #'  r <- nr*ni #number of measurements
-#'  t <- matrix(rep(1:nr), ni, ncol=1, nrow=r) # the variable to be tested 
+#'  t <- matrix(rep(1:nr), ni, ncol=1, nrow=r) # the variable to be tested
 #'  sigma <- 0.5
 #'  b0 <- 1
-#'  
+#'
 #'  #under the null:
 #'  b1 <- 0
-#'  
+#'
 #'  #create the matrix of gene expression
 #'  y.tilde <- b0 + b1*t + rnorm(r, sd = sigma)
 #'  y <- t(matrix(rnorm(n*r, sd = sqrt(sigma*abs(y.tilde))), ncol=n, nrow=r) +
 #'           matrix(rep(y.tilde, n), ncol=n, nrow=r))
-#'  
+#'
 #'  #no covariates
 #'  x <- matrix(1, ncol=1, nrow=r)
-#'  
+#'
 #'  #run test
 #'  #asymptotic test with preprocessed grouped data
 #'  res_genes <- dear_seq(exprmat=y, covariates=x, variables2test=t,
 #'                        sample_group=rep(1:ni, each=nr),
 #'                        which_test='asymptotic',
 #'                       which_weights='none', preprocessed=TRUE)
-#' 
+#'
 #'  #proportion of raw p-values>0.05
 #'  mean(res_genes$pvals[, 'rawPval']>0.05)
-#'  
+#'
 #'  #quantiles of raw p-values
 #'  quantile(res_genes$pvals[, 'rawPval'])
-#'  
+#'
 #'  #proportion of raw p-values<0.05 i.e. proportion of DE genes
 #'  res[i] <- mean(res_genes$pvals[, 'rawPval']<0.05)
 #'  message(i)
@@ -245,7 +245,7 @@ dear_seq <- function(exprmat = NULL, object = NULL,
                      which_test = c("permutation", "asymptotic"),
                      which_weights = c("loclin", "voom", "none"),
                      n_perm = 1000, progressbar = TRUE, parallel_comp = TRUE,
-                     nb_cores = ceiling(parallel::detectCores()/2 - 1),
+                     nb_cores = parallel::detectCores(logical=FALSE) - 1,
                      preprocessed = FALSE,
                      gene_based_weights = FALSE,
                      bw = "nrd",

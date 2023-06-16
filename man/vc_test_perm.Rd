@@ -14,7 +14,7 @@ vc_test_perm(
   n_perm = 1000,
   progressbar = TRUE,
   parallel_comp = TRUE,
-  nb_cores = ceiling(parallel::detectCores()/2 - 1),
+  nb_cores = parallel::detectCores(logical = FALSE) - 1,
   genewise_pvals = FALSE,
   adaptive = TRUE,
   max_adaptive = 64000,
@@ -53,13 +53,13 @@ Windows. Default is \code{TRUE}.}
 
 \item{nb_cores}{an integer indicating the number of cores to be used when
 \code{parallel_comp} is \code{TRUE}.
-Default is \code{ceiling(parallel::detectCores()/2 - 1)}.}
+Default is \code{parallel::detectCores(logical=FALSE) - 1}.}
 
 \item{genewise_pvals}{a logical flag indicating whether gene-wise p-values
 should be returned. Default is \code{FALSE} in which case gene-set p-value is
 computed and returned instead.}
 
-\item{adaptive}{a logical flag indicating whether adaptive permutation should 
+\item{adaptive}{a logical flag indicating whether adaptive permutation should
 be performed. Default is \code{TRUE}}
 
 \item{max_adaptive}{The maximum number of permutations considered.
