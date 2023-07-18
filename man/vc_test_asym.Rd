@@ -96,8 +96,8 @@ quantile(asymTestRes$gene_pvals)
 
 }
 \references{
-Chen T & Lumley T (2019), Numerical evaluation of methods approximating the 
-distribution of a large quadratic form in normal variables, Computational 
+Chen T & Lumley T (2019), Numerical evaluation of methods approximating the
+distribution of a large quadratic form in normal variables, Computational
 Statistics & Data Analysis, 139:75-81.
 }
 \seealso{

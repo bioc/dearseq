@@ -232,7 +232,7 @@
 #'}
 #'
 #'
-#'#round(rowMeans(vapply(res_quant, FUN = quantile, FUN.VALUE = rep(1.1, 5)), 3)
+#'#round(rowMeans(vapply(res_quant, FUN = quantile, FUN.VALUE = rep(1.1, 5))), 3)
 #'#plot(density(unlist(res_quant)))
 #'#mean(unlist(res_quant)<0.05)
 #'

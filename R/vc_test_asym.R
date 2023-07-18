@@ -51,9 +51,9 @@
 #'
 #'@seealso \code{\link[survey]{pchisqsum}}
 #'
-#'@references 
-#'Chen T & Lumley T (2019), Numerical evaluation of methods approximating the 
-#'distribution of a large quadratic form in normal variables, Computational 
+#'@references
+#'Chen T & Lumley T (2019), Numerical evaluation of methods approximating the
+#'distribution of a large quadratic form in normal variables, Computational
 #'Statistics & Data Analysis, 139:75-81.
 #'
 #'@examples
@@ -93,7 +93,7 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                          Sigma_xi = diag(ncol(phi)),
                          genewise_pvals = FALSE, homogen_traj = FALSE,
                          na.rm = FALSE) {
-    
+
     if (homogen_traj) {
         score_list <- vc_score_h(y = y, x = x, indiv = factor(indiv), phi = phi,
                                  w = w, Sigma_xi = Sigma_xi, na_rm = na.rm)
@@ -101,15 +101,15 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
         score_list <- vc_score(y = y, x = x, indiv = factor(indiv), phi = phi,
                                w = w, Sigma_xi = Sigma_xi, na_rm = na.rm)
     }
-    
+
     nindiv <- nrow(score_list$q_ext)
     ng <- nrow(y)
     nphi <- ncol(phi)
-    
+
     if (ng * nindiv < 1) {
         stop("no gene measured/no sample included ...")
     }
-    
+
     if (genewise_pvals) {
         gene_scores_obs <- score_list$gene_scores_unscaled
         if (nindiv == 1) {
@@ -122,14 +122,19 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
             gene_inds <- lapply(seq_len(ng), function(x) {
                 x + (ng) * (seq_len(nphi) - 1)
             })
-            
+
             gene_lambda <- lapply(gene_inds, function(x) {
                 Sig_q_gene <- cov(score_list$q_ext[, x, drop = FALSE])
-                lam <- tryCatch(svd(Sig_q_gene)$d, 
+                lam <- tryCatch(eigen(Sig_q_gene, symmetric = TRUE, only.values = TRUE)$values,
                                 error=function(cond){return(NULL)}
                 )
                 if (is.null(lam)){
-                    lam <- tryCatch(svd(Sig_q_gene)$d, 
+                    lam <- tryCatch(svd(Sig_q_gene)$d,
+                                    error=function(cond){return(NULL)}
+                    )
+                }
+                if (is.null(lam)){
+                    lam <- tryCatch(svd(Sig_q_gene)$d,
                                     error=function(cond){
                                         warning("SVD decomposition failed for at least one ",
                                                 "gene")
@@ -138,7 +143,7 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                 }
                 return(lam)
             })
-            pv <- try(mapply(FUN = survey::pchisqsum, 
+            pv <- try(mapply(FUN = survey::pchisqsum,
                              x = gene_scores_obs,
                              df=1,
                              a = gene_lambda,
@@ -153,40 +158,45 @@ vc_test_asym <- function(y, x, indiv = rep(1, nrow(x)), phi, w,
                                   acc = 5e-04)["Qq", ])
             }
         }
-        
+
         names(pv) <- rownames(y)
-        
-        ans <- list("gene_scores_obs" = gene_scores_obs, 
+
+        ans <- list("gene_scores_obs" = gene_scores_obs,
                     "gene_pvals" = pv)
-        
+
     } else {
-        
+
         if (nindiv == 1) {
             Sig_q <- matrix(1, ng, ng)
         } else {
             Sig_q <- cov(score_list$q_ext)
         }
-        
-        lam <- tryCatch(svd(Sig_q)$d, 
+
+        lam <- tryCatch(eigen(Sig_q, symmetric = TRUE, only.values = TRUE)$values,
                         error=function(cond){return(NULL)}
         )
         if (is.null(lam)) {
-            lam <- tryCatch(svd(round(Sig_q, 6))$d, 
+            lam <- tryCatch(svd(Sig_q)$d,
+                            error=function(cond){return(NULL)}
+            )
+        }
+        if (is.null(lam)) {
+            lam <- tryCatch(svd(round(Sig_q, 6))$d,
                             error=function(cond){
                                 stop("SVD decomposition failed")
                             })
         }
-        
-        dv <- survey::pchisqsum(x = score_list$score, 
-                                    df=1, 
+
+        dv <- survey::pchisqsum(x = score_list$score,
+                                    df=1,
                                     a = lam,
                                     lower.tail = FALSE,
                                     method = "saddlepoint")
-        
-        ans <- list("set_score_obs" = score_list$score, 
+
+        ans <- list("set_score_obs" = score_list$score,
                     "set_pval" = dv)
     }
-    
+
     return(ans)
 }
 
