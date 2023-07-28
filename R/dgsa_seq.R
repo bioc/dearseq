@@ -605,7 +605,7 @@ dgsa_seq <- function(exprmat = NULL, object = NULL,
       prop_meas <- vapply(genesets, function(x) {
         length(intersect(x, gene_names_measured))/length(x)
       }, FUN.VALUE = 1)
-      if (sum(prop_meas) != length(prop_meas)) {
+      if (sum(prop_meas, na.rm = TRUE) != length(prop_meas)) {
         warning("Some transcripts in the investigated gene sets were ",
                 "not measured:\nremoving those transcripts from the ",
                 "gene set definition...")
