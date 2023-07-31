@@ -242,7 +242,7 @@ vc_score_perm <- function(y, x, indiv, phi, w, Sigma_xi = diag(ncol(phi)),
         pboptions(opb)
     }
     if(is.vector(gene_Q)){
-      gene_Q = matrix(gene_Q, nrow = 1)
+      gene_Q <- matrix(gene_Q, nrow = 1)
     }
 
     rownames(gene_Q) <- colnames(yt_mu)
