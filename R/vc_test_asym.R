@@ -18,7 +18,7 @@
 #'\code{K} longitudinal variables to be tested (typically a vector of time
 #'points or functions of time)
 #'
-#'@param w a vector of length \code{n} containing the weights for the \code{n}
+#'@param w numeric matrix of dim \code{G x n} containing the weights for G genes from the \code{n}
 #'samples, corresponding to the inverse of the diagonal of the estimated
 #'covariance matrix of y.
 #'
